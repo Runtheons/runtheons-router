@@ -1,4 +1,3 @@
-exports.Router = require("./Router/index");
+const Router = require("./Router");
 
-exports.Route = require("./Router/Route");
-
+module.exports = (app) => new Router(app);

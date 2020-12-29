@@ -2,14 +2,8 @@ const Scanner = require("./Scanner");
 
 module.exports = class Router {
 
-    /*
-        Express router
-    */
     app = null;
 
-    /*
-        Constructor
-    */
     constructor(app) {
         this.app = app;
     }
