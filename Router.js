@@ -1,4 +1,6 @@
-const Scanner = require("./Scanner");
+const path = require("path");
+const fs = require("fs");
+const Route = require("./Route");
 
 module.exports = class Router {
 
@@ -15,8 +17,31 @@ module.exports = class Router {
         routes.forEach(p => {
             var dirpath = path.join(process.cwd(), p);
             dirpath = path.dirname(dirpath);
-            Scanner.scanDir(dirpath);
+            this.scanDir(dirpath);
         });
     }
+
+    scandDir(filepath) {
+        if (fs.existsSync(filepath)) {
+            var files = fs.readdirSync(filepath);
+            files.forEach(f => {
+                var filename = path.join(filepath, f);
+                var stat = fs.lstatSync(filename);
+                if (stat.isDirectory()) {
+                    this.scandDir(filename);
+                } else if (filename.indexOf(".js") >= 0) {
+                    this.loadRoute(filename);
+                }
+            });
+        }
+    }
+
+    loadRoute(filename) {
+        var route = require(filename);
+        if (route instanceof Route) {
+            route.load(this.app);
+        }
+    }
+
 
 }

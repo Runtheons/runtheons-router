@@ -13,5 +13,8 @@
     "bugs": {
         "url": "https://github.com/Zexal0807/runtheons/issues"
     },
-    "homepage": "https://github.com/Zexal0807/runtheons#readme"
+    "homepage": "https://github.com/Zexal0807/runtheons#readme",
+    "dependencies": {
+        "@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git"
+    }
 }
