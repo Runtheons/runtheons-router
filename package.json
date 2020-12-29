@@ -1,0 +1,17 @@
+{
+    "name": "runtheons",
+    "version": "1.0.0",
+    "description": "The Runtheons package",
+    "main": "index.js",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Zexal0807/runtheons.git"
+    },
+    "author": "Zexal0807",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Zexal0807/runtheons/issues"
+    },
+    "homepage": "https://github.com/Zexal0807/runtheons#readme"
+}
