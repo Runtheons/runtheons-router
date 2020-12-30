@@ -17,7 +17,7 @@
     "dependencies": {
         "@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
         "@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git",
-        "@runtheons/sessiona-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
+        "@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
         "fs": "0.0.1-security",
         "path": "^0.12.7"
     }
