@@ -55,7 +55,9 @@ module.exports = class Route {
     }
 
     getSession(req) {
-        return sessionManager.getData(req);
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        return sessionManager.getData(token);
     }
 
     getData(req) {
