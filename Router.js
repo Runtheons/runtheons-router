@@ -21,14 +21,14 @@ module.exports = class Router {
         });
     }
 
-    scandDir(filepath) {
+    scanDir(filepath) {
         if (fs.existsSync(filepath)) {
             var files = fs.readdirSync(filepath);
             files.forEach(f => {
                 var filename = path.join(filepath, f);
                 var stat = fs.lstatSync(filename);
                 if (stat.isDirectory()) {
-                    this.scandDir(filename);
+                    this.scanDir(filename);
                 } else if (filename.indexOf(".js") >= 0) {
                     this.loadRoute(filename);
                 }
