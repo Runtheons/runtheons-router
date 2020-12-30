@@ -1,3 +1,4 @@
+const sessionManager = require("@runtheons/session-manager");
 const validator = null; //require("@runtheons/validate");
 const responseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
@@ -53,6 +54,7 @@ module.exports = class Route {
     }
 
     getSession(req) {
+        return sessionManager.getData(req);
     }
 
     getData(req) {
@@ -67,6 +69,7 @@ module.exports = class Route {
             status: false
         };
     };
+
     schema = {};
 
     isValid(data) {
@@ -74,6 +77,14 @@ module.exports = class Route {
         var valid = validator.validate(this.schema, data);
         return valid;
     }
+
+    notValidDataHandle = function(err) {
+        return {
+            msg: "Not valid data",
+            status: false
+        };
+    };
+
     functionHandle = function(data, session) {
         return {
             msg: "OK",
