@@ -15,6 +15,7 @@
     },
     "homepage": "https://github.com/Zexal0807/runtheons#readme",
     "dependencies": {
-        "@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git"
+        "@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
+        "@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git"
     }
 }
