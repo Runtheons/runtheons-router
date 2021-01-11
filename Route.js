@@ -1,110 +1,132 @@
+const dataManipule = require("@runtheons/data-manipulate");
 const sessionManager = require("@runtheons/session-manager");
-const validator = null; //require("@runtheons/validate");
+const validator = require("runtheons-validate");
 const responseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
 const AuthorizzationToken = require("@runtheons/authorizzation/AuthorizzationToken");
 
 module.exports = class Route {
 
-    path = "/";
+	path = "/";
 
-    method = "GET";
+	method = "GET";
 
-    constructor(obj = {}) {
-        Object.assign(this, obj);
-    }
+	constructor(obj = {}) {
+		Object.assign(this, obj);
+	}
 
-    avaible = true;
+	avaible = true;
 
-    isAvaible() {
-        return this.avaible;
-    }
+	isAvaible() {
+		return this.avaible;
+	}
 
-    load(router) {
-        if (this.isAvaible()) {
-            console.log(this.path + " is loaded");
-            var method = this.method.toLowerCase();
-            router[method](this.path, this.resolve);
-        }
-    }
+	load(router) {
+		if (this.isAvaible()) {
+			console.log(this.path + " is loaded");
+			var method = this.method.toLowerCase();
+			router[method](this.path, this.resolve);
+		}
+	}
 
-    resolve(req, res) {
-        //Get Data
-        var data = this.getData(req);
-        var session = this.getSession(req);
-        var headerResponseOption = this.getOptions(req);
+	getData(req) {
+		var data = {};
 
-        var responseData = {}
+		Object.keys(req.params).forEach((key) => {
+			this.parse(key, req.params[key], data);
+		});
 
-        //Authorizzation
-        var auth = this.isAuthorized(session);
-        if (auth.status) {
-            //Validation
-            var valid = this.isValid(data);
-            if (valid.status) {
-                responseData = this.functionHandle(data, session);
-            } else {
-                responseData = this.notValidDataHandle(valid.errors);
-            }
-        } else {
-            responseData = this.notAuthorizedHandle(auth.errors);
-        }
-        //Make Response with headerResponseOption
-        responseFactory.setReponse(res);
-        responseFactory.send(responseData, headerResponseOption);
-    }
+		Object.keys(req.body).forEach((key) => {
+			this.parse(key, req.body[key], data);
+		});
 
-    getSession(req) {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
-        return sessionManager.getData(token);
-    }
+		if (req.files) {
+			Object.keys(req.files).forEach((key) => {
+				data[key] = req.files[key];
+			});
+		}
 
-    getData(req) {
-    }
+		return dataManipule.decode(data);
+	}
 
-    auth = [];
+	getSession(req) {
+		const authHeader = req.headers['authorization'];
+		const token = authHeader && authHeader.split(' ')[1];
+		return sessionManager.extractData(token);
+	}
 
-    getAuthToken() {
-        if (this.auth.length == 0)
-            return new AuthorizzationToken();
-        if (this.auth.length == 1)
-            return this.auth[0];
+	getOptions(req) {
+		return responseFactory.getOption(req);
+	}
 
-        return Authorizzation.merge(this.auth);
-    }
+	async resolve(req, res) {
+		//Get Data
+		var data = this.getData(req);
+		var session = this.getSession(req);
+		var headerResponseOption = this.getOptions(req);
 
-    isAuthorized(session) {
-        var authToken = getAuthToken();
-    }
+		var responseData = {}
 
-    notAuthorizedHandle = function(err) {
-        return {
-            msg: "Unauthorized user",
-            status: false
-        };
-    };
+		//Authorizzation
+		var auth = this.isAuthorized(session);
+		if (auth.status) {
+			//Validation
+			var valid = this.isValid(data);
+			if (valid.status) {
+				responseData = await this.functionHandle(data, session);
+			} else {
+				responseData = await this.notValidDataHandle(valid.errors);
+			}
+		} else {
+			responseData = await this.notAuthorizedHandle(auth.errors);
+		}
+		//Make Response with headerResponseOption
+		responseFactory.setReponse(res);
+		responseFactory.send(responseData, headerResponseOption);
+	}
 
-    schema = {};
+	auth = [];
 
-    isValid(data) {
-        //Using Runtheons Validator
-        var valid = validator.validate(this.schema, data);
-        return valid;
-    }
+	getAuthToken() {
+		if (this.auth.length == 0)
+			return new AuthorizzationToken();
+		if (this.auth.length == 1)
+			return this.auth[0];
 
-    notValidDataHandle = function(err) {
-        return {
-            msg: "Not valid data",
-            status: false
-        };
-    };
+		return Authorizzation.merge(this.auth);
+	}
 
-    functionHandle = function(data, session) {
-        return {
-            msg: "OK",
-            status: true
-        };
-    };
+	isAuthorized(session) {
+		var authToken = getAuthToken();
+		return Authorizzation.execute(authToken, session);
+	}
+
+	notAuthorizedHandle = function(err) {
+		return {
+			msg: "Unauthorized user",
+			status: false
+		};
+	};
+
+	schema = {};
+
+	isValid(data) {
+		//Using Runtheons Validator
+		return validator.validate(this.schema, data);
+	}
+
+	notValidDataHandle = function(err) {
+		return {
+			msg: "Not valid data",
+			status: false
+		};
+	};
+
+	functionHandle = function(data, session) {
+		return {
+			msg: "OK",
+			status: true
+		};
+	};
 
 }
