@@ -1,24 +1,24 @@
 {
-    "name": "@runtheons/router",
-    "version": "1.0.0",
-    "description": "The Runtheons package",
-    "main": "index.js",
-    "scripts": {},
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Zexal0807/runtheons.git"
-    },
-    "author": "Zexal0807",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/Zexal0807/runtheons/issues"
-    },
-    "homepage": "https://github.com/Zexal0807/runtheons#readme",
-    "dependencies": {
-        "@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
-        "@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git",
-        "@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
-        "fs": "0.0.1-security",
-        "path": "^0.12.7"
-    }
+	"name": "@runtheons/router",
+	"version": "1.0.1",
+	"description": "The Runtheons package",
+	"main": "index.js",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Zexal0807/runtheons.git"
+	},
+	"author": "Zexal0807",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Zexal0807/runtheons/issues"
+	},
+	"homepage": "https://github.com/Zexal0807/runtheons#readme",
+	"dependencies": {
+		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
+		"@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git",
+		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
+		"fs": "0.0.1-security",
+		"path": "^0.12.7"
+	}
 }
