@@ -25,7 +25,9 @@ module.exports = class Route {
 		if (this.isAvaible()) {
 			console.log(this.path + " is loaded");
 			var method = this.method.toLowerCase();
-			router[method](this.path, this.resolve);
+			router[method](this.path, (req, res) => {
+				this.resolve(req, res)
+			});
 		}
 	}
 
