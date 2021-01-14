@@ -79,15 +79,27 @@ module.exports = class Route {
 			//Validation
 			var valid = this.isValid(data);
 			if (valid.status) {
+				responseData.data = await this.functionHandle(data, session, headerResponseOption);
 				responseData.status = true;
-				responseData.data = await this.functionHandle(data, session);
 			} else {
-				responseData = await this.notValidDataHandle(valid.errors);
-				responseData.status = false;
+				await this.notValidDataHandle(valid.errors);
+				responseData = {
+					status: false,
+					error = {
+						code: 0,
+						msg: valid.errors
+					}
+				};
 			}
 		} else {
-			responseData = await this.notAuthorizedHandle(auth.errors);
-			responseData.status = false;
+			await this.notAuthorizedHandle(auth.errors);
+			responseData = {
+				status: false,
+				error = {
+					code: 0,
+					msg: auth.errors
+				}
+			};
 		}
 		//Make Response with headerResponseOption
 		responseFactory.setResponse(res);
@@ -120,10 +132,6 @@ module.exports = class Route {
 	schema = {};
 
 	isValid(data) {
-		//Using Runtheons Validator
-		return {
-			status: true
-		}
 		return validator.validate(this.schema, data);
 	}
 
@@ -134,7 +142,7 @@ module.exports = class Route {
 		};
 	};
 
-	functionHandle = function(data, session) {
+	functionHandle = function(data, session, headerResponseOption) {
 		return {};
 	};
 
