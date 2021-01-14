@@ -35,11 +35,11 @@ module.exports = class Route {
 		var data = {};
 
 		Object.keys(req.params).forEach((key) => {
-			this.parse(key, req.params[key], data);
+			data[key] = req.params[key];
 		});
 
 		Object.keys(req.body).forEach((key) => {
-			this.parse(key, req.body[key], data);
+			data[key] = req.body[key];
 		});
 
 		if (req.files) {
@@ -48,7 +48,11 @@ module.exports = class Route {
 			});
 		}
 
-		return dataManipule.decode(data);
+		if (req.headers['encode-runtheons'] != undefined) {
+			data = dataManipule.decode(data);
+		}
+
+		return data;
 	}
 
 	getSession(req) {
@@ -58,6 +62,7 @@ module.exports = class Route {
 	}
 
 	getOptions(req) {
+		console.log(responseFactory);
 		return responseFactory.getOption(req);
 	}
 
@@ -83,7 +88,7 @@ module.exports = class Route {
 			responseData = await this.notAuthorizedHandle(auth.errors);
 		}
 		//Make Response with headerResponseOption
-		responseFactory.setReponse(res);
+		responseFactory.setResponse(res);
 		responseFactory.send(responseData, headerResponseOption);
 	}
 
@@ -99,7 +104,7 @@ module.exports = class Route {
 	}
 
 	isAuthorized(session) {
-		var authToken = getAuthToken();
+		var authToken = this.getAuthToken();
 		return Authorizzation.execute(authToken, session);
 	}
 
