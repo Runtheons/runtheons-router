@@ -21,6 +21,15 @@ module.exports = class Route {
 		return this.avaible;
 	}
 
+	get() {
+		return {
+			"path": this.path,
+			"method": this.method,
+			"schema": this.schema,
+			"auth": this.auth
+		}
+	}
+
 	load(router) {
 		if (this.isAvaible()) {
 			console.log(this.path + " is loaded");
@@ -85,7 +94,7 @@ module.exports = class Route {
 				await this.notValidDataHandle(valid.errors);
 				responseData = {
 					status: false,
-					error = {
+					error: {
 						code: 0,
 						msg: valid.errors
 					}
@@ -95,7 +104,7 @@ module.exports = class Route {
 			await this.notAuthorizedHandle(auth.errors);
 			responseData = {
 				status: false,
-				error = {
+				error: {
 					code: 0,
 					msg: auth.errors
 				}

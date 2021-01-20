@@ -1,9 +1,11 @@
 {
 	"name": "@runtheons/router",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "The Runtheons package",
 	"main": "index.js",
-	"scripts": {},
+	"scripts": {
+		"doc": "node doc.js"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Zexal0807/runtheons.git"
@@ -18,6 +20,7 @@
 		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
 		"@runtheons/data-manipulate": "git+https://github.com/Zexal0807/runtheons-data-manipulate.git",
 		"@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git",
+		"@runtheons/route-documentation": "git+https://github.com/Zexal0807/runtheons-route-documentation.git",
 		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
 		"fs": "0.0.1-security",
 		"path": "^0.12.7",
