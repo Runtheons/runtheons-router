@@ -25,7 +25,7 @@ module.exports = class Router {
 	}
 
 	load(node = null) {
-		if (load == null) {
+		if (node == null) {
 			this.load(this.avaibleFiles);
 		} else {
 			node.forEach(el => {
