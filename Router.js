@@ -28,8 +28,12 @@ module.exports = class Router {
 		if (node == null) {
 			this.load(this.avaibleFiles);
 		} else {
-			node.forEach(el => {
-
+			Object.keys(node).forEach(k => {
+				if (typeof node[k] == "string") {
+					this._loadRoute(node[k]);
+				} else {
+					this.load(node[k]);
+				}
 			});
 		}
 	}
@@ -66,7 +70,7 @@ module.exports = class Router {
 		}
 	}
 
-	loadRoute(filename) {
+	_loadRoute(filename) {
 		var route = require(filename);
 		route.load(this.app);
 	}
