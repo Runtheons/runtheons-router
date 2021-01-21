@@ -3,7 +3,6 @@ const sessionManager = require("@runtheons/session-manager");
 const validator = require("runtheons-validate");
 const responseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
-const AuthorizzationToken = require("@runtheons/authorizzation/AuthorizzationToken");
 
 module.exports = class Route {
 
@@ -117,18 +116,13 @@ module.exports = class Route {
 
 	auth = [];
 
-	getAuthToken() {
-		if (this.auth.length == 0)
-			return new AuthorizzationToken();
-		if (this.auth.length == 1)
-			return this.auth[0];
-
-		return Authorizzation.merge(this.auth);
+	getAuth() {
+		return this.auth;
 	}
 
 	isAuthorized(session) {
-		var authToken = this.getAuthToken();
-		return Authorizzation.execute(authToken, session);
+		var authToken = this.getAuth();
+		return Authorizzation.check(authToken, session);
 	}
 
 	notAuthorizedHandle = function(err) {
