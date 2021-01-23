@@ -1,7 +1,7 @@
-const dataManipule = require("@runtheons/data-manipulate");
-const sessionManager = require("@runtheons/session-manager");
-const validator = require("runtheons-validate");
-const responseFactory = require("@runtheons/response-factory");
+const DataManipule = require("@runtheons/data-manipulate");
+const SessionManager = require("@runtheons/session-manager");
+const Validator = require("@runtheons/validate");
+const ResponseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
 
 module.exports = class Route {
@@ -20,15 +20,6 @@ module.exports = class Route {
 		return this.avaible;
 	}
 
-	get() {
-		return {
-			"path": this.path,
-			"method": this.method,
-			"schema": this.schema,
-			"auth": this.auth
-		}
-	}
-
 	load(router) {
 		if (this.isAvaible()) {
 			console.log(this.path + " is loaded");
@@ -41,6 +32,10 @@ module.exports = class Route {
 
 	getData(req) {
 		var data = {};
+
+		Object.keys(req.query).forEach((key) => {
+			data[key] = req.query[key];
+		});
 
 		Object.keys(req.params).forEach((key) => {
 			data[key] = req.params[key];
@@ -57,7 +52,7 @@ module.exports = class Route {
 		}
 
 		if (req.headers['encode-runtheons'] != undefined) {
-			data = dataManipule.decode(data);
+			return DataManipule.decode(data);
 		}
 
 		return data;
@@ -66,11 +61,11 @@ module.exports = class Route {
 	getSession(req) {
 		const authHeader = req.headers['authorization'];
 		const token = authHeader && authHeader.split(' ')[1];
-		return sessionManager.extractData(token);
+		return SessionManager.extractData(token);
 	}
 
 	getOptions(req) {
-		return responseFactory.getOption(req);
+		return ResponseFactory.getOption(req);
 	}
 
 	async resolve(req, res) {
@@ -90,28 +85,16 @@ module.exports = class Route {
 				responseData.data = await this.functionHandle(data, session, headerResponseOption);
 				responseData.status = true;
 			} else {
-				await this.notValidDataHandle(valid.errors);
-				responseData = {
-					status: false,
-					error: {
-						code: 0,
-						msg: valid.errors
-					}
-				};
+				responseData.data = await this.notValidDataHandle(valid.errors);
+				responseData.status = false;
 			}
 		} else {
-			await this.notAuthorizedHandle(auth.errors);
-			responseData = {
-				status: false,
-				error: {
-					code: 0,
-					msg: auth.errors
-				}
-			};
+			responseData.data = await this.notAuthorizedHandle(valid.errors);
+			responseData.status = false;
 		}
 		//Make Response with headerResponseOption
-		responseFactory.setResponse(res);
-		responseFactory.send(responseData, headerResponseOption);
+		ResponseFactory.setResponse(res);
+		ResponseFactory.send(responseData, headerResponseOption);
 	}
 
 	auth = [];
@@ -126,23 +109,17 @@ module.exports = class Route {
 	}
 
 	notAuthorizedHandle = function(err) {
-		return {
-			msg: "Unauthorized user",
-			status: false
-		};
+		return {};
 	};
 
 	schema = {};
 
 	isValid(data) {
-		return validator.validate(this.schema, data);
+		return Validator.validate(this.schema, data);
 	}
 
 	notValidDataHandle = function(err) {
-		return {
-			msg: "Not valid data",
-			status: false
-		};
+		return {};
 	};
 
 	functionHandle = function(data, session, headerResponseOption) {
