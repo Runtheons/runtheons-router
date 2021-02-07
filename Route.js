@@ -74,7 +74,10 @@ module.exports = class Route {
 		var session = this.getSession(req);
 		var headerResponseOption = this.getOptions(req);
 
-		var responseData = {}
+		var responseData = {
+			status: false,
+			data: []
+		}
 
 		//Authorizzation
 		var auth = this.isAuthorized(session);
@@ -85,12 +88,11 @@ module.exports = class Route {
 				responseData.data = await this.functionHandle(data, session, headerResponseOption);
 				responseData.status = true;
 			} else {
-				responseData.data = await this.notValidDataHandle(valid.errors);
-				responseData.status = false;
+				await this.notValidDataHandle(valid.errors);
+				responseData.data = valid.errors;
 			}
 		} else {
-			await this.notAuthorizedHandle(valid.errors);
-			responseData.status = false;
+			await this.notAuthorizedHandle(auth.errors);
 			responseData.data = auth.errors;
 		}
 		//Make Response with headerResponseOption
@@ -117,12 +119,19 @@ module.exports = class Route {
 		return Validator.validate(this.schema, data);
 	}
 
-	notValidDataHandle = function(err) {
-		return {};
-	};
+	notValidDataHandle = function(err) {};
 
 	functionHandle = function(data, session, headerResponseOption) {
 		return {};
 	};
+
+	get() {
+		return {
+			"path": this.path,
+			"method": this.method,
+			"schema": this.schema,
+			"auth": this.auth
+		}
+	}
 
 }
