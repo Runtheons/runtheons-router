@@ -74,10 +74,7 @@ module.exports = class Route {
 		var session = this.getSession(req);
 		var headerResponseOption = this.getOptions(req);
 
-		var responseData = {
-			status: false,
-			data: []
-		}
+		var responseData = {};
 
 		//Authorizzation
 		var auth = this.isAuthorized(session);
@@ -85,15 +82,32 @@ module.exports = class Route {
 			//Validation
 			var valid = this.isValid(data);
 			if (valid.status) {
-				responseData.data = await this.functionHandle(data, session, headerResponseOption);
-				responseData.status = true;
+				await this.functionHandle(data, session, headerResponseOption)
+					// The function work and return (with a resolve) some data
+					.then(data => {
+						responseData.status = true;
+						responseData.data = data;
+					})
+					// The function not work and return (with a reject) some err
+					.catch(err => {
+						responseData.status = false;
+						responseData.errors = err;
+					});
 			} else {
-				await this.notValidDataHandle(valid.errors);
-				responseData.data = valid.errors;
+				await this.notValidDataHandle(valid.errors)
+					.catch(err => {
+
+					});
+				responseData.status = false;
+				responseData.errors = valid.errors;
 			}
 		} else {
-			await this.notAuthorizedHandle(auth.errors);
-			responseData.data = auth.errors;
+			await this.notAuthorizedHandle(auth.errors)
+				.catch(err => {
+
+				});
+			responseData.status = false;
+			responseData.errors = auth.errors;
 		}
 		//Make Response with headerResponseOption
 		ResponseFactory.setResponse(res);
