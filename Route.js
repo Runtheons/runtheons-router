@@ -82,32 +82,32 @@ module.exports = class Route {
 			//Validation
 			var valid = this.isValid(data);
 			if (valid.status) {
-				await this.functionHandle(data, session, headerResponseOption)
-					// The function work and return (with a resolve) some data
-					.then(data => {
-						responseData.status = true;
-						responseData.data = data;
-					})
-					// The function not work and return (with a reject) some err
-					.catch(err => {
-						responseData.status = false;
-						responseData.errors = err;
-					});
+				try {
+					responseData.data = await this.functionHandle(data, session, headerResponseOption);
+					responseData.status = true;
+				} catch (err) {
+					responseData.status = false;
+					responseData.errors = err;
+				}
 			} else {
-				await this.notValidDataHandle(valid.errors)
-					.catch(err => {
-
-					});
 				responseData.status = false;
 				responseData.errors = valid.errors;
+
+				try {
+					await this.notValidDataHandle(valid.errors)
+				} catch (err) {
+					console.log(err);
+				}
 			}
 		} else {
-			await this.notAuthorizedHandle(auth.errors)
-				.catch(err => {
-
-				});
 			responseData.status = false;
 			responseData.errors = auth.errors;
+
+			try {
+				await this.notAuthorizedHandle(valid.errors)
+			} catch (err) {
+				console.log(err);
+			}
 		}
 		//Make Response with headerResponseOption
 		ResponseFactory.setResponse(res);
