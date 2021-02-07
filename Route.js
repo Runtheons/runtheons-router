@@ -89,8 +89,9 @@ module.exports = class Route {
 				responseData.status = false;
 			}
 		} else {
-			responseData.data = await this.notAuthorizedHandle(valid.errors);
+			await this.notAuthorizedHandle(valid.errors);
 			responseData.status = false;
+			responseData.data = auth.errors;
 		}
 		//Make Response with headerResponseOption
 		ResponseFactory.setResponse(res);
@@ -108,9 +109,7 @@ module.exports = class Route {
 		return Authorizzation.check(authToken, session);
 	}
 
-	notAuthorizedHandle = function(err) {
-		return {};
-	};
+	notAuthorizedHandle = function(err) {};
 
 	schema = {};
 
