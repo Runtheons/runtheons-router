@@ -104,7 +104,7 @@ module.exports = class Route {
 			responseData.errors = auth.errors;
 
 			try {
-				await this.notAuthorizedHandle(valid.errors)
+				await this.notAuthorizedHandle(auth.errors)
 			} catch (err) {
 				console.log(err);
 			}
