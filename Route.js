@@ -1,4 +1,3 @@
-const DataManipule = require("@runtheons/data-manipulate");
 const SessionManager = require("@runtheons/session-manager");
 const Validator = require("@runtheons/validate");
 const ResponseFactory = require("@runtheons/response-factory");
@@ -49,10 +48,6 @@ module.exports = class Route {
 			Object.keys(req.files).forEach((key) => {
 				data[key] = req.files[key];
 			});
-		}
-
-		if (req.headers['encode-runtheons'] != undefined) {
-			return DataManipule.decode(data);
 		}
 
 		return data;
