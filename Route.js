@@ -135,13 +135,21 @@ module.exports = class Route {
 
 	tests = [];
 
-	test(request) {
-		console.log("TEST " + this.path);
-		this.tests.forEach(async t => {
+	async test(request) {
+		const asyncForEach = async(array, callback) => {
+			for (let index = 0; index < array.length; index++) {
+				await callback(array[index], index, array)
+			}
+		}
+
+		var result = "\u001b[93m TEST \u001b[0m" + this.path;
+		await asyncForEach(this.tests, async(t) => {
 			await t.test(request)
 				.then(e => { console.log("  ", t.name, "Success"); })
 				.catch(e => { console.log("  ", t.name, "Fail"); });
 		});
+		});
+		return result;
 	}
 
 	get() {

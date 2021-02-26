@@ -47,7 +47,9 @@ module.exports = class Router {
 		} else {
 			Object.keys(node).forEach(k => {
 				if (typeof node[k] == "string") {
-					this._testRoute(node[k], filter);
+					this._testRoute(node[k], filter).then(result => {
+						console.log(result);
+					});
 				} else {
 					this.test(filter, node[k]);
 				}
@@ -92,10 +94,12 @@ module.exports = class Router {
 		route.load(this.app);
 	}
 
-	_testRoute(filename, filter) {
+	async _testRoute(filename, filter) {
 		var route = require(filename);
-		if (filter.exec(route.path) != null)
-			route.test(this.testRequest);
+		if (filter.exec(route.path) != null) {
+			return await route.test(this.testRequest);
+		}
+		return "";
 	}
 
 }
