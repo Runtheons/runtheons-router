@@ -48,7 +48,8 @@ module.exports = class Router {
 			Object.keys(node).forEach(k => {
 				if (typeof node[k] == "string") {
 					this._testRoute(node[k], filter).then(result => {
-						console.log(result);
+						if (result != null)
+							console.log(result);
 					});
 				} else {
 					this.test(filter, node[k]);
@@ -99,6 +100,6 @@ module.exports = class Router {
 		if (filter.exec(route.path) != null) {
 			return await route.test(this.testRequest);
 		}
-		return "";
+		return null;
 	}
 }
