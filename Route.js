@@ -3,7 +3,6 @@ const Validator = require("@runtheons/validate");
 const ResponseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
 
-
 module.exports = class Route {
 
 	path = "/";
@@ -71,7 +70,6 @@ module.exports = class Route {
 		var headerResponseOption = this.getOptions(req);
 
 		var responseData = {};
-
 		//Authorizzation
 		var auth = this.isAuthorized(session);
 		if (auth.status) {
@@ -138,12 +136,13 @@ module.exports = class Route {
 	tests = [];
 
 	test(request) {
-		this.tests.forEach(t => {
-			t.test(request);
-			console.log("TEST" + this.path);
+		console.log("TEST " + this.path);
+		this.tests.forEach(async t => {
+			await t.test(request)
+				.then(e => { console.log("  ", t.name, "Success"); })
+				.catch(e => { console.log("  ", t.name, "Fail"); });
 		});
 	}
-
 
 	get() {
 		return {
