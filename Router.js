@@ -7,7 +7,7 @@ module.exports = class Router {
 	app = null;
 	avaibleFiles = null;
 
-	test = null;
+	testRequest = null;
 
 	constructor(app) {
 		this.app = app;
@@ -96,7 +96,7 @@ module.exports = class Router {
 		var route = require(filename);
 		
 		if(filter.exec(route.path) != null)
-			route.test(this.test);
+			route.test(this.testRequest);
 	}
 
 }
