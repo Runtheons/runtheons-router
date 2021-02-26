@@ -7,6 +7,8 @@ module.exports = class Router {
 	app = null;
 	avaibleFiles = null;
 
+	test = null;
+
 	constructor(app) {
 		this.app = app;
 		this.avaibleFiles = {};
@@ -40,6 +42,7 @@ module.exports = class Router {
 
 	test(filter, node = null) {
 		if (node == null) {
+			this.test = require("@runtheons/tester")(this.app);
 			this.test(filter, this.avaibleFiles);
 		} else {
 			Object.keys(node).forEach(k => {
@@ -93,7 +96,7 @@ module.exports = class Router {
 		var route = require(filename);
 		
 		if(filter.exec(route.path) != null)
-			route.test(this.app);
+			route.test(this.test);
 	}
 
 }

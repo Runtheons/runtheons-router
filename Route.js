@@ -3,6 +3,7 @@ const Validator = require("@runtheons/validate");
 const ResponseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
 
+
 module.exports = class Route {
 
 	path = "/";
@@ -17,10 +18,6 @@ module.exports = class Route {
 
 	isAvaible() {
 		return this.avaible;
-	}
-
-	test(app){
-		console.log("TEST" +this.path);
 	}
 
 	load(router) {
@@ -137,6 +134,16 @@ module.exports = class Route {
 	functionHandle = function(data, session, headerResponseOption) {
 		return {};
 	};
+
+	test = [];
+	
+	test(request){
+		test.forEach(t => {
+			t.test(request);
+			console.log("TEST" +this.path);
+		});
+	}
+
 
 	get() {
 		return {
