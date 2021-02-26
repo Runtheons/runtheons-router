@@ -42,7 +42,7 @@ module.exports = class Router {
 
 	test(filter, node = null) {
 		if (node == null) {
-			this.test = require("@runtheons/tester")(this.app);
+			this.testRequest = require("@runtheons/tester")(this.app);
 			this.test(filter, this.avaibleFiles);
 		} else {
 			Object.keys(node).forEach(k => {
@@ -54,7 +54,7 @@ module.exports = class Router {
 			});
 		}
 	}
-	
+
 	_createDirIfNotExist(node, dirName) {
 		if (node[dirName] == undefined || node[dirName] == null) {
 			node[dirName] = {};
@@ -94,8 +94,7 @@ module.exports = class Router {
 
 	_testRoute(filename, filter) {
 		var route = require(filename);
-		
-		if(filter.exec(route.path) != null)
+		if (filter.exec(route.path) != null)
 			route.test(this.testRequest);
 	}
 
