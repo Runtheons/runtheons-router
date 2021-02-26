@@ -138,7 +138,7 @@ module.exports = class Route {
 	tests = [];
 
 	test(request) {
-		tests.forEach(t => {
+		this.tests.forEach(t => {
 			t.test(request);
 			console.log("TEST" + this.path);
 		});
