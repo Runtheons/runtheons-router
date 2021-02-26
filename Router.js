@@ -101,5 +101,4 @@ module.exports = class Router {
 		}
 		return "";
 	}
-
 }

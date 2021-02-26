@@ -144,13 +144,15 @@ module.exports = class Route {
 
 		var result = "\u001b[93m TEST \u001b[0m" + this.path;
 		await asyncForEach(this.tests, async(t) => {
-			await t.test(request)
-				.then(() => {
-					result += "\n  \u001b[32m" + "Success\u001b[0m - " + t.name;
-				})
-				.catch(() => {
-					result += "\n  \u001b[31m" + "Failed\u001b[0m - " + t.name;
-				});
+			await t.test(request).then((d) => {
+				if (d.status) {
+					result += "\n  \u001b[32m" + "Success\u001b[0m ";
+				} else {
+					result += "\n  \u001b[31m" + "Failed\u001b[0m ";
+				}
+				result += "(" + d.duration + " ms)";
+				result += " - " + t.name;
+			});
 		});
 		return result;
 	}
@@ -163,5 +165,4 @@ module.exports = class Route {
 			"auth": this.auth
 		}
 	}
-
 }
