@@ -18,6 +18,7 @@
 		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git",
 		"@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git",
 		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git",
+		"@runtheons/tester": "git+https://github.com/Zexal0807/runtheons-tester.git",
 		"@runtheons/validate": "git+https://github.com/iamousseni/runtheons-validate.git",
 		"fs": "0.0.1-security",
 		"path": "^0.12.7"

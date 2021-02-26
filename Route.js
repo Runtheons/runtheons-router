@@ -19,6 +19,10 @@ module.exports = class Route {
 		return this.avaible;
 	}
 
+	test(app){
+		console.log("TEST" +this.path);
+	}
+
 	load(router) {
 		if (this.isAvaible()) {
 			console.log(this.path + " is loaded");

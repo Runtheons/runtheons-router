@@ -38,6 +38,20 @@ module.exports = class Router {
 		}
 	}
 
+	test(filter, node = null) {
+		if (node == null) {
+			this.load(fiter, this.avaibleFiles);
+		} else {
+			Object.keys(node).forEach(k => {
+				if (typeof node[k] == "string") {
+					this._testRoute(node[k], filter);
+				} else {
+					this.test(filter, node[k]);
+				}
+			});
+		}
+	}
+	
 	_createDirIfNotExist(node, dirName) {
 		if (node[dirName] == undefined || node[dirName] == null) {
 			node[dirName] = {};
@@ -73,6 +87,13 @@ module.exports = class Router {
 	_loadRoute(filename) {
 		var route = require(filename);
 		route.load(this.app);
+	}
+
+	_testRoute(filename, filter) {
+		var route = require(filename);
+		
+		if(filter.exec(route.path) != null)
+			route.test(this.app);
 	}
 
 }
