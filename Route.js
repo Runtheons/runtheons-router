@@ -135,12 +135,12 @@ module.exports = class Route {
 		return {};
 	};
 
-	test = [];
-	
-	test(request){
-		test.forEach(t => {
+	tests = [];
+
+	test(request) {
+		tests.forEach(t => {
 			t.test(request);
-			console.log("TEST" +this.path);
+			console.log("TEST" + this.path);
 		});
 	}
 
