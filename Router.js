@@ -40,7 +40,7 @@ module.exports = class Router {
 
 	test(filter, node = null) {
 		if (node == null) {
-			this.load(fiter, this.avaibleFiles);
+			this.test(filter, this.avaibleFiles);
 		} else {
 			Object.keys(node).forEach(k => {
 				if (typeof node[k] == "string") {
