@@ -145,9 +145,12 @@ module.exports = class Route {
 		var result = "\u001b[93m TEST \u001b[0m" + this.path;
 		await asyncForEach(this.tests, async(t) => {
 			await t.test(request)
-				.then(e => { console.log("  ", t.name, "Success"); })
-				.catch(e => { console.log("  ", t.name, "Fail"); });
-		});
+				.then(() => {
+					result += "\n  \u001b[32m" + "Success\u001b[0m - " + t.name;
+				})
+				.catch(() => {
+					result += "\n  \u001b[31m" + "Failed\u001b[0m - " + t.name;
+				});
 		});
 		return result;
 	}
