@@ -146,12 +146,15 @@ module.exports = class Route {
 		await asyncForEach(this.tests, async(t) => {
 			await t.test(request).then((d) => {
 				if (d.status) {
-					result += "\n  \u001b[32m" + "Success\u001b[0m ";
+					result += "\n  \u001b[32m" + "Success\u001b[0m";
 				} else {
 					result += "\n  \u001b[31m" + "Failed\u001b[0m ";
 				}
 				result += "(" + d.duration + " ms)";
 				result += " - " + t.name;
+				if (!d.status) {
+					result += "\n" + JSON.stringify(d.response.body) + "\n" + JSON.stringify(d.error);
+				}
 			});
 		});
 		return result;
