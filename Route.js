@@ -136,27 +136,13 @@ module.exports = class Route {
 	tests = [];
 
 	async test(request) {
-		const asyncForEach = async(array, callback) => {
-			for (let index = 0; index < array.length; index++) {
-				await callback(array[index], index, array)
-			}
-		}
-
-		var result = "\u001b[93m TEST \u001b[0m" + this.path;
-		await asyncForEach(this.tests, async(t) => {
+		var result = [];
+		for (var i = 0; i < this.tests.length; i++) {
+			var t = this.tests[i];
 			await t.test(request).then((d) => {
-				if (d.status) {
-					result += "\n  \u001b[32m" + "Success\u001b[0m";
-				} else {
-					result += "\n  \u001b[31m" + "Failed\u001b[0m ";
-				}
-				result += "(" + d.duration + " ms)";
-				result += " - " + t.name;
-				if (!d.status) {
-					result += "\n" + JSON.stringify(d.response.body) + "\n" + JSON.stringify(d.error);
-				}
+				result.push(d);
 			});
-		});
+		};
 		return result;
 	}
 
