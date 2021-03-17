@@ -7,8 +7,6 @@ module.exports = class Router {
 	app = null;
 	avaibleFiles = null;
 
-	testRequest = null;
-
 	constructor(app) {
 		this.app = app;
 		this.avaibleFiles = {};
@@ -81,7 +79,6 @@ module.exports = class Router {
 
 	async test(filter, node = null) {
 		if (node == null) {
-			this.testRequest = require("@runtheons/tester")(this.app);
 			var tests = await this.test(filter, this.avaibleFiles);
 			return tests;
 		} else {
@@ -110,7 +107,7 @@ module.exports = class Router {
 		};
 
 		if (filter.exec(route.path) != null) {
-			tests.tests = await route.test(this.testRequest);
+			tests.tests = await route.test();
 		}
 		return tests;
 	}
