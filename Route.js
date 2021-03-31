@@ -82,6 +82,40 @@ module.exports = class Route {
 				} catch (err) {
 					responseData.status = false;
 					responseData.errors = err;
+					/********************************DEBUG*************************************************/
+					if (responseData.errors.length == 0 || responseData.errors.code == undefined || responseData.msg == undefined) {
+						var debug = {
+							request: {
+								path: this.path,
+								method: this.method,
+								header: headerResponseOption.headers,
+								data: data,
+								session: session
+							},
+							response: responseData,
+						};
+						const fs = require("fs");
+						var path = "./debug/";
+						if (!fs.existsSync(path)) {
+							fs.mkdirSync(path, { recursive: true });
+						}
+						var time = new Date();
+						path += time.toISOString().slice(0, 10) + ' ';
+
+						path += time.toString().slice(16, 24).replace(/:/g, "-") + '.txt';
+						fs.open(path, 'a', function(e, file) {
+							if (e)
+								throw e;
+							var str = require('util').inspect(debug);
+							str = str + '\n\r';
+							fs.write(file, str, function(er) {
+								if (er)
+									throw er;
+								fs.close(file, function() {});
+							});
+						});
+					}
+					/**************************************************************************************/
 				}
 			} else {
 				responseData.status = false;
