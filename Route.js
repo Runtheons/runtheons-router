@@ -83,7 +83,11 @@ module.exports = class Route {
 					responseData.status = false;
 					responseData.errors = err;
 					/********************************DEBUG*************************************************/
-					if (responseData.errors.length == 0 || responseData.errors.code == undefined || responseData.msg == undefined) {
+					if (
+						(Array.isArray(responseData.errors) && responseData.errors.length == 0) ||
+						responseData.errors.code == undefined ||
+						responseData.errors.msg == undefined
+					) {
 						var debug = {
 							request: {
 								path: this.path,
@@ -102,7 +106,13 @@ module.exports = class Route {
 						var time = new Date();
 						path += time.toISOString().slice(0, 10) + ' ';
 
-						path += time.toString().slice(16, 24).replace(/:/g, "-") + '.txt';
+						path += time.toString().slice(16, 24).replace(/:/g, "-");
+
+						if (fs.existsSync(path + ".txt")) {
+							path += "-" + (Math.floor((Math.random() * 1000) + 1));
+						}
+
+						path += '.txt';
 						fs.open(path, 'a', function(e, file) {
 							if (e)
 								throw e;
