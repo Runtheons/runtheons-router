@@ -63,6 +63,35 @@ module.exports = class Route {
 		return ResponseFactory.getOption(req);
 	}
 
+	printDebugFile(debug) {
+		const fs = require("fs");
+		var path = "./debug/";
+		if (!fs.existsSync(path)) {
+			fs.mkdirSync(path, { recursive: true });
+		}
+		var time = new Date();
+		path += time.toISOString().slice(0, 10) + ' ';
+
+		path += time.toString().slice(16, 24).replace(/:/g, "-");
+
+		if (fs.existsSync(path + ".txt")) {
+			path += "-" + (Math.floor((Math.random() * 1000) + 1));
+		}
+
+		path += '.txt';
+		fs.open(path, 'a', function(e, file) {
+			if (e)
+				throw e;
+			var str = require('util').inspect(debug);
+			str = str + '\n\r';
+			fs.write(file, str, function(er) {
+				if (er)
+					throw er;
+				fs.close(file, function() {});
+			});
+		});
+	}
+
 	async resolve(req, res) {
 		//Get Data
 		var data = this.getData(req);
@@ -86,7 +115,8 @@ module.exports = class Route {
 					if (
 						(Array.isArray(responseData.errors) && responseData.errors.length == 0) ||
 						responseData.errors.code == undefined ||
-						responseData.errors.msg == undefined
+						responseData.errors.msg == undefined ||
+						headerResponseOption.type == ResponseFactory.FILE
 					) {
 						var debug = {
 							request: {
@@ -98,32 +128,7 @@ module.exports = class Route {
 							},
 							response: responseData,
 						};
-						const fs = require("fs");
-						var path = "./debug/";
-						if (!fs.existsSync(path)) {
-							fs.mkdirSync(path, { recursive: true });
-						}
-						var time = new Date();
-						path += time.toISOString().slice(0, 10) + ' ';
-
-						path += time.toString().slice(16, 24).replace(/:/g, "-");
-
-						if (fs.existsSync(path + ".txt")) {
-							path += "-" + (Math.floor((Math.random() * 1000) + 1));
-						}
-
-						path += '.txt';
-						fs.open(path, 'a', function(e, file) {
-							if (e)
-								throw e;
-							var str = require('util').inspect(debug);
-							str = str + '\n\r';
-							fs.write(file, str, function(er) {
-								if (er)
-									throw er;
-								fs.close(file, function() {});
-							});
-						});
+						printDebugFile(debug);
 					}
 					/**************************************************************************************/
 				}

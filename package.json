@@ -1,6 +1,6 @@
 {
 	"name": "@runtheons/router",
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"description": "The Runtheons package",
 	"main": "index.js",
 	"scripts": {},
