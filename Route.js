@@ -128,7 +128,7 @@ module.exports = class Route {
 							},
 							response: responseData,
 						};
-						printDebugFile(debug);
+						this.printDebugFile(debug);
 					}
 					/**************************************************************************************/
 				}
