@@ -64,7 +64,6 @@ module.exports = class Router {
 		}
 	}
 
-
 	isAvaible(filename) {
 		var route = require(filename);
 		if (route instanceof Route) {
@@ -74,7 +73,7 @@ module.exports = class Router {
 
 	_loadRoute(filename) {
 		var route = require(filename);
-		route.load(this.app);
+		route.load(this);
 	}
 
 	async test(filter, node = null) {
