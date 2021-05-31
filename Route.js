@@ -100,7 +100,7 @@ module.exports = class Route {
 
 		var responseData = {};
 		//Authorizzation
-		var auth = this.isAuthorized(session);
+		var auth = this.isAuthorized(session, req);
 		if (auth.status) {
 			//Validation
 			var valid = this.isValid(data);
@@ -163,9 +163,9 @@ module.exports = class Route {
 		return this.auth;
 	}
 
-	isAuthorized(session) {
+	isAuthorized(session, req) {
 		var authToken = this.getAuth();
-		return Authorizzation.check(authToken, session);
+		return Authorizzation.check(authToken, session, req);
 	}
 
 	notAuthorizedHandle = function(err) {};
