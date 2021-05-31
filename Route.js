@@ -96,7 +96,7 @@ module.exports = class Route {
 		//Get Data
 		var data = this.getData(req);
 		var session = this.getSession(req);
-		var headerResponseOption = this.getOptions(req);
+		var responseOption = this.getOptions(req);
 
 		var responseData = {};
 		//Authorizzation
@@ -106,7 +106,7 @@ module.exports = class Route {
 			var valid = this.isValid(data);
 			if (valid.status) {
 				try {
-					responseData.data = await this.functionHandle(data, session, headerResponseOption);
+					responseData.data = await this.functionHandle(data, session, responseOption);
 					responseData.status = true;
 				} catch (err) {
 					responseData.status = false;
@@ -116,13 +116,13 @@ module.exports = class Route {
 						(Array.isArray(responseData.errors) && responseData.errors.length == 0) ||
 						responseData.errors.code == undefined ||
 						responseData.errors.msg == undefined ||
-						headerResponseOption.type == ResponseFactory.FILE
+						responseOption.type == ResponseFactory.FILE
 					) {
 						var debug = {
 							request: {
 								path: this.path,
 								method: this.method,
-								header: headerResponseOption.headers,
+								header: responseOption.headers,
 								data: data,
 								session: session
 							},
@@ -152,9 +152,9 @@ module.exports = class Route {
 				console.log(err);
 			}
 		}
-		//Make Response with headerResponseOption
+		//Make Response with responseOption
 		ResponseFactory.setResponse(res);
-		ResponseFactory.send(responseData, headerResponseOption);
+		ResponseFactory.send(responseData, responseOption);
 	}
 
 	auth = [];
@@ -178,7 +178,7 @@ module.exports = class Route {
 
 	notValidDataHandle = function(err) {};
 
-	functionHandle = function(data, session, headerResponseOption) {
+	functionHandle = function(data, session, responseOption) {
 		return {};
 	};
 
