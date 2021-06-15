@@ -188,23 +188,15 @@ module.exports = class Route {
 
 	tests = [];
 
-	async test(request) {
+	async test() {
 		var result = [];
 		for (var i = 0; i < this.tests.length; i++) {
 			var t = this.tests[i];
-			await t.test(request).then((d) => {
-				result.push(d);
-			});
+			await t.test()
+				.then((d) => {
+					result.push(d);
+				});
 		};
 		return result;
-	}
-
-	get() {
-		return {
-			"path": this.path,
-			"method": this.method,
-			"schema": this.schema,
-			"auth": this.auth
-		}
 	}
 }
