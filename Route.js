@@ -4,7 +4,6 @@ const ResponseFactory = require("@runtheons/response-factory");
 const Authorizzation = require("@runtheons/authorizzation");
 
 module.exports = class Route {
-
 	path = "/";
 
 	method = "GET";
@@ -28,7 +27,7 @@ module.exports = class Route {
 			console.log(this.path + " is loaded");
 			var method = this.method.toLowerCase();
 			router[method](this.path, (req, res) => {
-				this.resolve(req, res)
+				this.resolve(req, res);
 			});
 		}
 	}
@@ -57,14 +56,20 @@ module.exports = class Route {
 		return data;
 	}
 
+	getToken(req) {
+		const authHeader = req.headers["authorization"];
+		return authHeader && authHeader.split(" ")[1];
+	}
+
 	getSession(req) {
-		const authHeader = req.headers['authorization'];
-		const token = authHeader && authHeader.split(' ')[1];
+		const token = this.getToken(req);
 		return SessionManager.extractData(token);
 	}
 
 	getOptions(req) {
-		return ResponseFactory.getOption(req);
+		var option = ResponseFactory.getOption(req);
+		option.token = this.getToken(req);
+		return option;
 	}
 
 	printDebugFile(debug) {
@@ -74,23 +79,21 @@ module.exports = class Route {
 			fs.mkdirSync(path, { recursive: true });
 		}
 		var time = new Date();
-		path += time.toISOString().slice(0, 10) + ' ';
+		path += time.toISOString().slice(0, 10) + " ";
 
 		path += time.toString().slice(16, 24).replace(/:/g, "-");
 
 		if (fs.existsSync(path + ".txt")) {
-			path += "-" + (Math.floor((Math.random() * 1000) + 1));
+			path += "-" + Math.floor(Math.random() * 1000 + 1);
 		}
 
-		path += '.txt';
-		fs.open(path, 'a', function(e, file) {
-			if (e)
-				throw e;
-			var str = require('util').inspect(debug);
-			str = str + '\n\r';
+		path += ".txt";
+		fs.open(path, "a", function(e, file) {
+			if (e) throw e;
+			var str = require("util").inspect(debug);
+			str = str + "\n\r";
 			fs.write(file, str, function(er) {
-				if (er)
-					throw er;
+				if (er) throw er;
 				fs.close(file, function() {});
 			});
 		});
@@ -110,14 +113,19 @@ module.exports = class Route {
 			var valid = this.isValid(data);
 			if (valid.status) {
 				try {
-					responseData.data = await this.functionHandle(data, session, responseOption);
+					responseData.data = await this.functionHandle(
+						data,
+						session,
+						responseOption
+					);
 					responseData.status = true;
 				} catch (err) {
 					responseData.status = false;
 					responseData.errors = err;
 					/********************************DEBUG*************************************************/
 					if (
-						(Array.isArray(responseData.errors) && responseData.errors.length == 0) ||
+						(Array.isArray(responseData.errors) &&
+							responseData.errors.length == 0) ||
 						responseData.errors.code == undefined ||
 						responseData.errors.msg == undefined ||
 						responseOption.type == ResponseFactory.FILE
@@ -128,7 +136,7 @@ module.exports = class Route {
 								method: this.method,
 								header: responseOption.headers,
 								data: data,
-								session: session
+								session: session,
 							},
 							response: responseData,
 						};
@@ -141,7 +149,7 @@ module.exports = class Route {
 				responseData.errors = valid.errors;
 
 				try {
-					await this.notValidDataHandle(valid.errors)
+					await this.notValidDataHandle(valid.errors);
 				} catch (err) {
 					console.log(err);
 				}
@@ -151,7 +159,7 @@ module.exports = class Route {
 			responseData.errors = auth.errors;
 
 			try {
-				await this.notAuthorizedHandle(auth.errors)
+				await this.notAuthorizedHandle(auth.errors);
 			} catch (err) {
 				console.log(err);
 			}
@@ -192,11 +200,10 @@ module.exports = class Route {
 		var result = [];
 		for (var i = 0; i < this.tests.length; i++) {
 			var t = this.tests[i];
-			await t.test()
-				.then((d) => {
-					result.push(d);
-				});
-		};
+			await t.test().then((d) => {
+				result.push(d);
+			});
+		}
 		return result;
 	}
-}
+};
