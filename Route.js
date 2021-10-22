@@ -1,12 +1,12 @@
-const SessionManager = require("@runtheons/session-manager");
-const Validator = require("@runtheons/validate");
-const ResponseFactory = require("@runtheons/response-factory");
-const Authorizzation = require("@runtheons/authorizzation");
+const SessionManager = require('@runtheons/session-manager');
+const Validator = require('@runtheons/validate');
+const ResponseFactory = require('@runtheons/response-factory');
+const Authorizzation = require('@runtheons/authorizzation');
 
 module.exports = class Route {
-	path = "/";
+	path = '/';
 
-	method = "GET";
+	method = 'GET';
 
 	constructor(obj = {}) {
 		Object.assign(this, obj);
@@ -24,7 +24,7 @@ module.exports = class Route {
 		if (this.isAvaible()) {
 			this.server = server;
 			var router = server.app;
-			console.log(this.path + " is loaded");
+			console.log(this.path + ' is loaded');
 			var method = this.method.toLowerCase();
 			router[method](this.path, (req, res) => {
 				this.resolve(req, res);
@@ -57,8 +57,8 @@ module.exports = class Route {
 	}
 
 	getToken(req) {
-		const authHeader = req.headers["authorization"];
-		return authHeader && authHeader.split(" ")[1];
+		const authHeader = req.headers['authorization'];
+		return authHeader && authHeader.split(' ')[1];
 	}
 
 	getSession(req) {
@@ -73,28 +73,28 @@ module.exports = class Route {
 	}
 
 	printDebugFile(debug) {
-		const fs = require("fs");
-		var path = "./debug/";
+		const fs = require('fs');
+		var path = './debug/';
 		if (!fs.existsSync(path)) {
 			fs.mkdirSync(path, { recursive: true });
 		}
 		var time = new Date();
-		path += time.toISOString().slice(0, 10) + " ";
+		path += time.toISOString().slice(0, 10) + ' ';
 
-		path += time.toString().slice(16, 24).replace(/:/g, "-");
+		path += time.toString().slice(16, 24).replace(/:/g, '-');
 
-		if (fs.existsSync(path + ".txt")) {
-			path += "-" + Math.floor(Math.random() * 1000 + 1);
+		if (fs.existsSync(path + '.txt')) {
+			path += '-' + Math.floor(Math.random() * 1000 + 1);
 		}
 
-		path += ".txt";
-		fs.open(path, "a", function(e, file) {
+		path += '.txt';
+		fs.open(path, 'a', function (e, file) {
 			if (e) throw e;
-			var str = require("util").inspect(debug);
-			str = str + "\n\r";
-			fs.write(file, str, function(er) {
+			var str = require('util').inspect(debug);
+			str = str + '\n\r';
+			fs.write(file, str, function (er) {
 				if (er) throw er;
-				fs.close(file, function() {});
+				fs.close(file, function () {});
 			});
 		});
 	}
@@ -136,9 +136,9 @@ module.exports = class Route {
 								method: this.method,
 								header: responseOption.headers,
 								data: data,
-								session: session,
+								session: session
 							},
-							response: responseData,
+							response: responseData
 						};
 						this.printDebugFile(debug);
 					}
@@ -180,7 +180,7 @@ module.exports = class Route {
 		return Authorizzation.check(authToken, session, req);
 	}
 
-	notAuthorizedHandle = function(err) {};
+	notAuthorizedHandle = function (err) {};
 
 	schema = {};
 
@@ -188,9 +188,9 @@ module.exports = class Route {
 		return Validator.validate(this.schema, data);
 	}
 
-	notValidDataHandle = function(err) {};
+	notValidDataHandle = function (err) {};
 
-	functionHandle = function(data, session, responseOption) {
+	functionHandle = function (data, session, responseOption) {
 		return {};
 	};
 
