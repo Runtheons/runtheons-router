@@ -88,29 +88,24 @@ module.exports = class Route {
 		}
 
 		path += '.txt';
-		fs.open(path, 'a', function (e, file) {
+		fs.open(path, 'a', function(e, file) {
 			if (e) throw e;
 			var str = require('util').inspect(debug);
 			str = str + '\n\r';
-			fs.write(file, str, function (er) {
+			fs.write(file, str, function(er) {
 				if (er) throw er;
-				fs.close(file, function () {});
+				fs.close(file, function() {});
 			});
 		});
 	}
 
-	async resolve(req, res) {
-		//Get Data
-		var data = this.getData(req);
-		var session = this.getSession(req);
-		var responseOption = this.getOptions(req);
-
+	async execute(data, session, responseOption, req) {
 		var responseData = {};
 		//Authorizzation
-		var auth = this.isAuthorized(session, req);
+		var auth = await this.isAuthorized(session, req);
 		if (auth.status) {
 			//Validation
-			var valid = this.isValid(data);
+			var valid = await this.isValid(data);
 			if (valid.status) {
 				try {
 					responseData.data = await this.functionHandle(
@@ -164,6 +159,17 @@ module.exports = class Route {
 				console.log(err);
 			}
 		}
+		return responseData;
+	}
+
+	async resolve(req, res) {
+		//Get Data
+		var data = this.getData(req);
+		var session = this.getSession(req);
+		var responseOption = this.getOptions(req);
+
+		var responseData = await this.execute(data, session, responseOption, req);
+
 		//Make Response with responseOption
 		ResponseFactory.setResponse(res);
 		ResponseFactory.send(responseData, responseOption);
@@ -180,7 +186,7 @@ module.exports = class Route {
 		return Authorizzation.check(authToken, session, req);
 	}
 
-	notAuthorizedHandle = function (err) {};
+	notAuthorizedHandle = function(err) {};
 
 	schema = {};
 
@@ -188,9 +194,9 @@ module.exports = class Route {
 		return Validator.validate(this.schema, data);
 	}
 
-	notValidDataHandle = function (err) {};
+	notValidDataHandle = function(err) {};
 
-	functionHandle = function (data, session, responseOption) {
+	functionHandle = function(data, session, responseOption) {
 		return {};
 	};
 
