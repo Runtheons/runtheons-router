@@ -99,6 +99,42 @@ module.exports = class Route {
 		});
 	}
 
+	executeWithoutResponse(data, session, responseOption, req) {
+		return new Promise(async(resolve, reject) => {
+			var responseData = {};
+			var auth = await this.isAuthorized(session, req);
+			if (auth.status) {
+				var valid = await this.isValid(data);
+				if (valid.status) {
+					try {
+						responseData.data = await this.functionHandle(
+							data,
+							session,
+							responseOption
+						);
+						return resolve(responseData.data);
+					} catch (err) {
+						return reject(err);
+					}
+				} else {
+					try {
+						await this.notValidDataHandle(valid.errors);
+					} catch (err) {
+						console.log(err);
+					}
+					return reject(valid.errors);
+				}
+			} else {
+				try {
+					await this.notAuthorizedHandle(auth.errors);
+				} catch (err) {
+					console.log(err);
+				}
+				return reject(auth.errors);
+			}
+		});
+	}
+
 	async execute(data, session, responseOption, req) {
 		var responseData = {};
 		//Authorizzation
