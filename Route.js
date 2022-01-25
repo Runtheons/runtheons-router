@@ -2,17 +2,27 @@ const SessionManager = require('@runtheons/session-manager');
 const Validator = require('@runtheons/validate');
 const ResponseFactory = require('@runtheons/response-factory');
 const Authorizzation = require('@runtheons/authorizzation');
+const { Logger } = require('@runtheons/utils');
 
 module.exports = class Route {
 	path = '/';
 
 	method = 'GET';
 
-	constructor(obj = {}) {
-		Object.assign(this, obj);
-	}
-
 	avaible = true;
+
+	auth = [];
+
+	schema = {};
+
+	constructor({ path, method, avaible, auth, schema, functionHandle }) {
+		this.path = path;
+		this.method = method;
+		this.avaible = avaible;
+		this.auth = auth;
+		this.schema = schema;
+		this.functionHandle = functionHandle;
+	}
 
 	isAvaible() {
 		return this.avaible;
@@ -36,7 +46,11 @@ module.exports = class Route {
 		var data = {};
 
 		Object.keys(req.query).forEach((key) => {
-			data[key] = req.query[key];
+			let value = req.query[key];
+			if (value === parseInt(value) + '') {
+				value = parseInt(value);
+			}
+			data[key] = value;
 		});
 
 		Object.keys(req.params).forEach((key) => {
@@ -63,86 +77,18 @@ module.exports = class Route {
 
 	getSession(req) {
 		const token = this.getToken(req);
-		return SessionManager.extractData(token);
+		return token && SessionManager.extractData(token);
 	}
 
 	getOptions(req) {
-		var option = ResponseFactory.getOption(req);
-		option.token = this.getToken(req);
-		return option;
-	}
-
-	printDebugFile(debug) {
-		const fs = require('fs');
-		var path = './debug/';
-		if (!fs.existsSync(path)) {
-			fs.mkdirSync(path, { recursive: true });
+			var option = ResponseFactory.getOption(req);
+			option.token = this.getToken(req);
+			return option;
 		}
-		var time = new Date();
-		path += time.toISOString().slice(0, 10) + ' ';
-
-		path += time.toString().slice(16, 24).replace(/:/g, '-');
-
-		if (fs.existsSync(path + '.txt')) {
-			path += '-' + Math.floor(Math.random() * 1000 + 1);
-		}
-
-		path += '.txt';
-		fs.open(path, 'a', function(e, file) {
-			if (e) throw e;
-			var str = require('util').inspect(debug);
-			str = str + '\n\r';
-			fs.write(file, str, function(er) {
-				if (er) throw er;
-				fs.close(file, function() {});
-			});
-		});
-	}
-
-	executeWithoutResponse(data, session, responseOption, req) {
-		return new Promise(async(resolve, reject) => {
-			var responseData = {};
-			var auth = await this.isAuthorized(session, req);
-			if (auth.status) {
-				var valid = await this.isValid(data);
-				if (valid.status) {
-					try {
-						responseData.data = await this.functionHandle(
-							data,
-							session,
-							responseOption
-						);
-						return resolve(responseData.data);
-					} catch (err) {
-						return reject(err);
-					}
-				} else {
-					try {
-						await this.notValidDataHandle(valid.errors);
-					} catch (err) {
-						console.log(err);
-					}
-					return reject(valid.errors);
-				}
-			} else {
-				try {
-					await this.notAuthorizedHandle(auth.errors);
-				} catch (err) {
-					console.log(err);
-				}
-				return reject(auth.errors);
-			}
-		});
-	}
-
-	async execute(data, session, responseOption, req) {
-		var responseData = {};
-		//Authorizzation
-		var auth = await this.isAuthorized(session, req);
-		if (auth.status) {
-			//Validation
-			var valid = await this.isValid(data);
-			if (valid.status) {
+		/*
+	async execute({ data, session, responseOption, req, responseData }) {
+		if (responseData.authorization.status) {
+			if (responseData.validation.status) {
 				try {
 					responseData.data = await this.functionHandle(
 						data,
@@ -153,7 +99,7 @@ module.exports = class Route {
 				} catch (err) {
 					responseData.status = false;
 					responseData.errors = err;
-					/********************************DEBUG*************************************************/
+					/********************************DEBUG*************************************************
 					if (
 						(Array.isArray(responseData.errors) &&
 							responseData.errors.length == 0) ||
@@ -171,13 +117,14 @@ module.exports = class Route {
 							},
 							response: responseData
 						};
-						this.printDebugFile(debug);
+
+						Logger.printDebugFile(debug);
 					}
-					/**************************************************************************************/
+					/**************************************************************************************
 				}
 			} else {
 				responseData.status = false;
-				responseData.errors = valid.errors;
+				responseData.errors = responseData.validation.errors;
 
 				try {
 					await this.notValidDataHandle(valid.errors);
@@ -187,7 +134,7 @@ module.exports = class Route {
 			}
 		} else {
 			responseData.status = false;
-			responseData.errors = auth.errors;
+			responseData.errors = responseData.authorization.errors;
 
 			try {
 				await this.notAuthorizedHandle(auth.errors);
@@ -197,55 +144,104 @@ module.exports = class Route {
 		}
 		return responseData;
 	}
-
+*/
 	async resolve(req, res) {
 		//Get Data
 		var data = this.getData(req);
 		var session = this.getSession(req);
 		var responseOption = this.getOptions(req);
 
-		var responseData = await this.execute(data, session, responseOption, req);
+		var responseData = {};
+		try {
+			responseData.data = this.authorize({
+				data,
+				session,
+				req,
+				responseOption,
+				responseData
+			});
+		} catch (err) {
+			/********************************DEBUG*************************************************/
+			if (
+				(Array.isArray(responseData.errors) &&
+					responseData.errors.length == 0) ||
+				responseData.errors.code == undefined ||
+				responseData.errors.msg == undefined ||
+				responseOption.type == ResponseFactory.FILE
+			) {
+				var debug = {
+					request: {
+						path: this.path,
+						method: this.method,
+						header: responseOption.headers,
+						data: data,
+						session: session
+					},
+					response: responseData
+				};
+
+				Logger.printDebugFile(debug);
+			}
+			/**************************************************************************************/
+		}
 
 		//Make Response with responseOption
 		ResponseFactory.setResponse(res);
 		ResponseFactory.send(responseData, responseOption);
 	}
 
-	auth = [];
-
-	getAuth() {
-		return this.auth;
+	async authorize({ data, session, req, responseOption, responseData }) {
+		responseData.authorization = await Authorizzation.check(
+			this.auth,
+			session,
+			req
+		);
+		if (responseData.authorization.status) {
+			responseData = await this.validate({
+				data,
+				session,
+				req,
+				responseOption,
+				responseData
+			});
+		} else {
+			await this.notAuthorizedHandle(responseData.authorization.errors);
+		}
+		responseData.status = false;
+		responseData.errors = responseData.authorization.errors;
+		return responseData;
 	}
 
-	isAuthorized(session, req) {
-		var authToken = this.getAuth();
-		return Authorizzation.check(authToken, session, req);
+	async validate({ data, session, req, responseOption, responseData }) {
+		responseData.validation = await Validator.validate(this.schema, data);
+		if (responseData.validation.status) {
+			responseData.status = true;
+			responseData.data = await this.functionHandle({
+				data,
+				session,
+				req,
+				responseOption,
+				responseData
+			});
+		} else {
+			responseData.status = false;
+			responseData.errors = responseData.validation.errors;
+			await this.notValidDataHandle(responseData.validation.errors);
+		}
+		return responseData;
 	}
 
 	notAuthorizedHandle = function(err) {};
 
-	schema = {};
-
-	isValid(data) {
-		return Validator.validate(this.schema, data);
-	}
-
 	notValidDataHandle = function(err) {};
 
-	functionHandle = function(data, session, responseOption) {
+	functionHandle = function({
+		data,
+		session,
+		req,
+		responseOption,
+		responseData
+	}) {
 		return {};
 	};
-
-	tests = [];
-
-	async test() {
-		var result = [];
-		for (var i = 0; i < this.tests.length; i++) {
-			var t = this.tests[i];
-			await t.test().then((d) => {
-				result.push(d);
-			});
-		}
-		return result;
-	}
 };

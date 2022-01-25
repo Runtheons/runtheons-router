@@ -15,11 +15,11 @@
 	},
 	"homepage": "https://github.com/Zexal0807/runtheons#readme",
 	"dependencies": {
-		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git#v1.1.2",
+		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git#v1.3.0",
 		"@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git#v1.4.0",
-		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git#v1.3.0",
-		"@runtheons/tester": "git+https://github.com/Zexal0807/runtheons-tester.git",
-		"@runtheons/validate": "git+https://github.com/iamousseni/runtheons-validate.git#v3.2.0",
+		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git#v1.4.0",
+		"@runtheons/utils": "git+https://github.com/Zexal0807/runtheons-utils.git#v2.4.0",
+		"@runtheons/validate": "git+https://github.com/iamousseni/runtheons-validate.git#v3.3.0",
 		"fs": "0.0.1-security",
 		"path": "^0.12.7"
 	}
