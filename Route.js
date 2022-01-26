@@ -81,70 +81,11 @@ module.exports = class Route {
 	}
 
 	getOptions(req) {
-			var option = ResponseFactory.getOption(req);
-			option.token = this.getToken(req);
-			return option;
-		}
-		/*
-	async execute({ data, session, responseOption, req, responseData }) {
-		if (responseData.authorization.status) {
-			if (responseData.validation.status) {
-				try {
-					responseData.data = await this.functionHandle(
-						data,
-						session,
-						responseOption
-					);
-					responseData.status = true;
-				} catch (err) {
-					responseData.status = false;
-					responseData.errors = err;
-					/********************************DEBUG*************************************************
-					if (
-						(Array.isArray(responseData.errors) &&
-							responseData.errors.length == 0) ||
-						responseData.errors.code == undefined ||
-						responseData.errors.msg == undefined ||
-						responseOption.type == ResponseFactory.FILE
-					) {
-						var debug = {
-							request: {
-								path: this.path,
-								method: this.method,
-								header: responseOption.headers,
-								data: data,
-								session: session
-							},
-							response: responseData
-						};
-
-						Logger.printDebugFile(debug);
-					}
-					/**************************************************************************************
-				}
-			} else {
-				responseData.status = false;
-				responseData.errors = responseData.validation.errors;
-
-				try {
-					await this.notValidDataHandle(valid.errors);
-				} catch (err) {
-					console.log(err);
-				}
-			}
-		} else {
-			responseData.status = false;
-			responseData.errors = responseData.authorization.errors;
-
-			try {
-				await this.notAuthorizedHandle(auth.errors);
-			} catch (err) {
-				console.log(err);
-			}
-		}
-		return responseData;
+		var option = ResponseFactory.getOption(req);
+		option.token = this.getToken(req);
+		return option;
 	}
-*/
+
 	async resolve(req, res) {
 		//Get Data
 		var data = this.getData(req);
@@ -153,7 +94,7 @@ module.exports = class Route {
 
 		var responseData = {};
 		try {
-			responseData.data = this.authorize({
+			responseData = await this.authorize({
 				data,
 				session,
 				req,
@@ -205,10 +146,10 @@ module.exports = class Route {
 				responseData
 			});
 		} else {
+			responseData.status = false;
+			responseData.errors = responseData.authorization.errors;
 			await this.notAuthorizedHandle(responseData.authorization.errors);
 		}
-		responseData.status = false;
-		responseData.errors = responseData.authorization.errors;
 		return responseData;
 	}
 
