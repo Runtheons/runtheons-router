@@ -20,7 +20,7 @@
 		"@runtheons/authorizzation": "git+https://github.com/Zexal0807/runtheons-authorizzation.git#v1.3.0",
 		"@runtheons/response-factory": "git+https://github.com/Zexal0807/runtheons-response-factory.git#v1.4.0",
 		"@runtheons/session-manager": "git+https://github.com/Zexal0807/runtheons-session-manager.git#v1.4.0",
-		"@runtheons/utils": "git+https://github.com/Zexal0807/runtheons-utils.git#v2.4.0",
+		"@runtheons/utils": "git+https://github.com/Zexal0807/runtheons-utils.git#v2.5.0",
 		"@runtheons/validate": "git+https://github.com/iamousseni/runtheons-validate.git#v3.3.0",
 		"express": "^4.17.2",
 		"fs": "0.0.1-security",
