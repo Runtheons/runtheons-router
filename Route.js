@@ -112,29 +112,10 @@ module.exports = class Route {
 		} catch (err) {
 			responseData.status = false;
 			responseData.errors = err;
-			/********************************DEBUG*************************************************/
-			/*
-			if (
-				(Array.isArray(responseData.errors) &&
-					responseData.errors.length == 0) ||
-				responseData.errors.code == undefined ||
-				responseData.errors.msg == undefined ||
-				responseOption.type == ResponseFactory.FILE
-			) {
-				var debug = {
-					request: {
-						path: this.path,
-						method: this.method,
-						header: responseOption.headers,
-						data: data,
-						session: session
-					},
-					response: responseData
-				};
-
-				Logger.printDebugFile(debug);
-			}*/
-			/**************************************************************************************/
+			if (!err.code) {
+				responseData.errors = err;
+				await Logger.printDebugFile(responseData);
+			}
 		}
 
 		//Make Response with responseOption

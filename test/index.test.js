@@ -108,18 +108,24 @@ describe('Test example', () => {
 				return done();
 			});
 	});
-	/*
-	test('Return reject', (done) => {
+	test('Exception throwed', (done) => {
+		const fs = require('fs');
+		if (fs.existsSync('./debug')) {
+			fs.rmdirSync('./debug', { recursive: true });
+		}
 		request(app)
-			.get('/test5')
+			.get('/test8')
 			.expect(200)
 			.expect((res) => {
-				console.log(res.body);
-				return res.body.status == true;
+				var files = fs.readdirSync('./debug');
+				return !res.body.status && files.length > 0;
 			})
 			.end((err, res) => {
+				if (fs.existsSync('./debug')) {
+					fs.rmdirSync('./debug', { recursive: true });
+				}
 				if (err) return done(err);
 				return done();
 			});
-	});*/
+	});
 });
