@@ -128,4 +128,15 @@ describe('Test example', () => {
 				return done();
 			});
 	});
+	test('Returning file', (done) => {
+		request(app)
+			.get('/test9')
+			.send()
+			.expect(200)
+			.expect('Content-Type', /png/)
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});
 });
