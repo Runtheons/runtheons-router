@@ -92,6 +92,22 @@ describe('Test example', () => {
 				return done();
 			});
 	});
+	test('Returning a reject', (done) => {
+		request(app)
+			.get('/test7')
+			.expect(200)
+			.expect((res) => {
+				return (!res.body.status &&
+					res.body.errors.length > 0 &&
+					res.body.authorization.status &&
+					res.body.validation.status
+				);
+			})
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});
 	/*
 	test('Return reject', (done) => {
 		request(app)

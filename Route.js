@@ -92,7 +92,15 @@ module.exports = class Route {
 		var session = this.getSession(req);
 		var responseOption = this.getOptions(req);
 
-		var responseData = {};
+		var responseData = {
+			request: {
+				path: this.path,
+				method: this.method,
+				header: responseOption.headers,
+				data: data,
+				session: session
+			}
+		};
 		try {
 			responseData = await this.authorize({
 				data,
@@ -102,7 +110,10 @@ module.exports = class Route {
 				responseData
 			});
 		} catch (err) {
+			responseData.status = false;
+			responseData.errors = err;
 			/********************************DEBUG*************************************************/
+			/*
 			if (
 				(Array.isArray(responseData.errors) &&
 					responseData.errors.length == 0) ||
@@ -122,7 +133,7 @@ module.exports = class Route {
 				};
 
 				Logger.printDebugFile(debug);
-			}
+			}*/
 			/**************************************************************************************/
 		}
 
