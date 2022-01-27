@@ -10,7 +10,7 @@ describe('Test example', () => {
 			.send({ email: 'abc.abc@aabc.com' })
 			.expect(200)
 			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status == true;
+				return res.body.data.other.msg == 'ok' && res.body.status;
 			})
 			.end((err, res) => {
 				if (err) return done(err);
@@ -23,7 +23,7 @@ describe('Test example', () => {
 			.send({ email: 'abc.abc@aabc.com' })
 			.expect(200)
 			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status == true;
+				return res.body.data.other.msg == 'ok' && res.body.status;
 			})
 			.end((err, res) => {
 				if (err) return done(err);
@@ -36,7 +36,7 @@ describe('Test example', () => {
 			.send({ email: 'abc.abc@aabc.com' })
 			.expect(200)
 			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status == true;
+				return res.body.data.other.msg == 'ok' && res.body.status;
 			})
 			.end((err, res) => {
 				if (err) return done(err);
@@ -49,11 +49,61 @@ describe('Test example', () => {
 			.send()
 			.expect(200)
 			.expect((res) => {
-				return res.body.data.msg == 'ok' && res.body.status == true;
+				return res.body.data.msg == 'ok' && res.body.status;
 			})
 			.end((err, res) => {
 				if (err) return done(err);
 				return done();
 			});
 	});
+	test('With invalid data', (done) => {
+		request(app)
+			.post('/test5')
+			.send({})
+			.expect(200)
+			.expect((res) => {
+				return (
+					res.body.status &&
+					res.body.errors.length > 0 &&
+					!res.body.validation.status &&
+					res.body.validation.errors.length > 0
+				);
+			})
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});
+	test('With unuthorized session', (done) => {
+		request(app)
+			.post('/test6')
+			.send({})
+			.expect(200)
+			.expect((res) => {
+				return (
+					res.body.status &&
+					res.body.errors.length > 0 &&
+					!res.body.authorization.status &&
+					res.body.authorization.errors.length > 0
+				);
+			})
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});
+	/*
+	test('Return reject', (done) => {
+		request(app)
+			.get('/test5')
+			.expect(200)
+			.expect((res) => {
+				console.log(res.body);
+				return res.body.status == true;
+			})
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});*/
 });

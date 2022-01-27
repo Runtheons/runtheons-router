@@ -6,7 +6,17 @@ Authorizzation.add('TEST', {
 	},
 	success: () => {},
 	error: () => {
-		return { msg: 'Session already set', code: 'A1' };
+		return {};
+	}
+});
+
+Authorizzation.add('TEST_NOT_AUTHORIZE', {
+	check: (session) => {
+		return false;
+	},
+	success: () => {},
+	error: () => {
+		return {};
 	}
 });
 
