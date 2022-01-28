@@ -1,5 +1,4 @@
 const Route = require('../../Route');
-const ResponseFactory = require('@runtheons/response-factory/ResponseFactory');
 
 module.exports = new Route({
 	path: '/test9',
@@ -7,8 +6,11 @@ module.exports = new Route({
 	avaible: true,
 	auth: [],
 	schema: {},
-	functionHandle: async function({ responseOption }) {
-		responseOption.type = ResponseFactory.FILE;
+	functionHandle: async function() {
 		return require('path').join(process.cwd(), './test/api/test.png');
+	},
+	sendResponse: function({ req, res, responseData }) {
+		res.status(200);
+		res.sendFile(responseData.data);
 	}
 });

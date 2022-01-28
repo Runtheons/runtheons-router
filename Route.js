@@ -1,6 +1,5 @@
 const SessionManager = require('@runtheons/session-manager');
 const Validator = require('@runtheons/validate');
-const ResponseFactory = require('@runtheons/response-factory');
 const Authorizzation = require('@runtheons/authorizzation');
 const { Logger } = require('@runtheons/utils');
 
@@ -15,13 +14,22 @@ module.exports = class Route {
 
 	schema = {};
 
-	constructor({ path, method, avaible, auth, schema, functionHandle }) {
-		this.path = path;
-		this.method = method;
-		this.avaible = avaible;
-		this.auth = auth;
-		this.schema = schema;
-		this.functionHandle = functionHandle;
+	constructor({
+		path,
+		method,
+		avaible,
+		auth,
+		schema,
+		functionHandle,
+		sendResponse
+	}) {
+		this.path = path || this.path;
+		this.method = method || this.method;
+		this.avaible = avaible || this.avaible;
+		this.avaible = auth || this.avaible;
+		this.schema = schema || this.schema;
+		this.functionHandle = functionHandle || this.functionHandle;
+		this.sendResponse = sendResponse || this.sendResponse;
 	}
 
 	isAvaible() {
@@ -79,24 +87,26 @@ module.exports = class Route {
 		const token = this.getToken(req);
 		return token && SessionManager.extractData(token);
 	}
-
-	getOptions(req) {
-		var option = ResponseFactory.getOption(req);
-		option.token = this.getToken(req);
-		return option;
-	}
-
 	async resolve(req, res) {
 		//Get Data
 		var data = this.getData(req);
 		var session = this.getSession(req);
-		var responseOption = this.getOptions(req);
 
 		var responseData = {
+			status: false,
+			errors: {},
+			authorization: {
+				status: false,
+				errors: {}
+			},
+			validation: {
+				status: false,
+				errors: {}
+			},
 			request: {
 				path: this.path,
 				method: this.method,
-				header: responseOption.headers,
+				header: req.headers,
 				data: data,
 				session: session
 			}
@@ -106,7 +116,6 @@ module.exports = class Route {
 				data,
 				session,
 				req,
-				responseOption,
 				responseData
 			});
 		} catch (err) {
@@ -117,13 +126,10 @@ module.exports = class Route {
 				await Logger.printDebugFile(responseData);
 			}
 		}
-
-		//Make Response with responseOption
-		ResponseFactory.setResponse(res);
-		ResponseFactory.send(responseData, responseOption);
+		this.sendResponse({ req, res, responseData });
 	}
 
-	async authorize({ data, session, req, responseOption, responseData }) {
+	async authorize({ data, session, req, responseData }) {
 		responseData.authorization = await Authorizzation.check(
 			this.auth,
 			session,
@@ -134,7 +140,6 @@ module.exports = class Route {
 				data,
 				session,
 				req,
-				responseOption,
 				responseData
 			});
 		} else {
@@ -145,7 +150,7 @@ module.exports = class Route {
 		return responseData;
 	}
 
-	async validate({ data, session, req, responseOption, responseData }) {
+	async validate({ data, session, req, responseData }) {
 		responseData.validation = await Validator.validate(this.schema, data);
 		if (responseData.validation.status) {
 			responseData.status = true;
@@ -153,7 +158,6 @@ module.exports = class Route {
 				data,
 				session,
 				req,
-				responseOption,
 				responseData
 			});
 		} else {
@@ -177,4 +181,9 @@ module.exports = class Route {
 	}) {
 		return {};
 	};
+
+	sendResponse({ req, res, responseData }) {
+		res.status(200);
+		res.json(responseData);
+	}
 };
