@@ -36,16 +36,12 @@ module.exports = class Route {
 		return this.avaible;
 	}
 
-	server = null;
-
-	load(server) {
+	load(router) {
 		if (this.isAvaible()) {
-			this.server = server;
-			var router = server.app;
 			console.log(this.path + ' is loaded');
 			var method = this.method.toLowerCase();
-			router[method](this.path, (req, res) => {
-				this.resolve(req, res);
+			router[method](this.path, async(req, res) => {
+				await this.resolve(req, res);
 			});
 		}
 	}
@@ -87,11 +83,8 @@ module.exports = class Route {
 		const token = this.getToken(req);
 		return token && SessionManager.extractData(token);
 	}
-	async resolve(req, res) {
-		//Get Data
-		var data = this.getData(req);
-		var session = this.getSession(req);
 
+	getEmptyResponseData({ data, session, req }) {
 		var responseData = {
 			status: false,
 			errors: {},
@@ -111,6 +104,16 @@ module.exports = class Route {
 				session: session
 			}
 		};
+		return responseData;
+	}
+
+	async resolve(req, res) {
+		//Get Data
+		var data = this.getData(req);
+		var session = this.getSession(req);
+
+		var responseData = this.getEmptyResponseData({ data, session, req });
+
 		try {
 			responseData = await this.authorize({
 				data,
@@ -172,13 +175,7 @@ module.exports = class Route {
 
 	notValidDataHandle = function(err) {};
 
-	functionHandle = function({
-		data,
-		session,
-		req,
-		responseOption,
-		responseData
-	}) {
+	functionHandle = function({ data, session, req, responseData }) {
 		return {};
 	};
 

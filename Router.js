@@ -11,6 +11,10 @@ module.exports = class Router {
 		this.avaibleFiles = {};
 	}
 
+	getAvaibleFiles() {
+		return this.avaibleFiles;
+	}
+
 	getAvaibleRoute(routes) {
 		if (!Array.isArray(routes)) {
 			routes = [routes];
@@ -72,6 +76,6 @@ module.exports = class Router {
 
 	_loadRoute(filename) {
 		var route = require(filename);
-		route.load(this);
+		route.load(this.app);
 	}
 };
