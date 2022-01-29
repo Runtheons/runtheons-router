@@ -1,9 +1,16 @@
 const request = require('supertest');
+const assert = require('assert');
 
 const server = require('./server');
 const app = server.app;
 
-describe('Test example', () => {
+describe('Router', () => {
+	test('Requiring from authorizate', () => {
+		assert.equal(server.getAvaibleFiles().length, 9);
+	});
+});
+
+describe('Routing', () => {
 	test('Requiring from authorizate', (done) => {
 		request(app)
 			.post('/test1')

@@ -8,7 +8,7 @@ module.exports = class Route {
 
 	method = 'GET';
 
-	avaible = true;
+	available = true;
 
 	auth = [];
 
@@ -17,7 +17,7 @@ module.exports = class Route {
 	constructor({
 		path,
 		method,
-		avaible,
+		available,
 		auth,
 		schema,
 		functionHandle,
@@ -25,19 +25,27 @@ module.exports = class Route {
 	}) {
 		this.path = path || this.path;
 		this.method = method || this.method;
-		this.avaible = avaible || this.avaible;
-		this.avaible = auth || this.avaible;
+		this.available = available || this.available;
+		this.auth = auth || this.auth;
 		this.schema = schema || this.schema;
 		this.functionHandle = functionHandle || this.functionHandle;
 		this.sendResponse = sendResponse || this.sendResponse;
 	}
 
-	isAvaible() {
-		return this.avaible;
+	getMethod() {
+		return this.method;
+	}
+
+	getPath() {
+		return this.path;
+	}
+
+	getAvailable() {
+		return this.available;
 	}
 
 	load(router) {
-		if (this.isAvaible()) {
+		if (this.available) {
 			console.log(this.path + ' is loaded');
 			var method = this.method.toLowerCase();
 			router[method](this.path, async(req, res) => {
