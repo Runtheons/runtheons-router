@@ -20,7 +20,10 @@ module.exports = class Route {
 		available,
 		auth,
 		schema,
+		notAuthorizedHandle,
+		notValidDataHandle,
 		functionHandle,
+		successHandle,
 		sendResponse
 	}) {
 		this.path = path || this.path;
@@ -28,7 +31,10 @@ module.exports = class Route {
 		this.available = available || this.available;
 		this.auth = auth || this.auth;
 		this.schema = schema || this.schema;
+		this.notAuthorizedHandle = notAuthorizedHandle || this.notAuthorizedHandle;
+		this.notValidDataHandle = notValidDataHandle || this.notValidDataHandle;
 		this.functionHandle = functionHandle || this.functionHandle;
+		this.successHandle = successHandle || this.successHandle;
 		this.sendResponse = sendResponse || this.sendResponse;
 	}
 
@@ -171,6 +177,7 @@ module.exports = class Route {
 				req,
 				responseData
 			});
+			await this.successHandle(responseData);
 		} else {
 			responseData.status = false;
 			responseData.errors = responseData.validation.errors;
@@ -182,6 +189,8 @@ module.exports = class Route {
 	notAuthorizedHandle = function(err) {};
 
 	notValidDataHandle = function(err) {};
+
+	successHandle = function(err) {};
 
 	functionHandle = function({ data, session, req, responseData }) {
 		return {};
