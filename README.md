@@ -24,7 +24,7 @@ This repository contains the source code and official documentation of api endpo
 
 ## Installation
 
-1. `npm install https://github.com/Zexal0807/runtheons-router` to add the package to the project
+1. `npm install https://github.com/Zexal0807/runtheons-router#2.2.0` to add the package to the project
 
 # Example of use
 
