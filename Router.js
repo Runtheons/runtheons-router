@@ -23,16 +23,15 @@ module.exports = class Router {
 		var routes = [];
 		dirpaths.forEach((dirpath) => {
 			dirpath = path.dirname(path.join(process.cwd(), dirpath));
-			routes = [...routes, ...this.scanDir(dirpath)];
+			routes = [...routes, ...this._scanDir(dirpath)];
 		});
 		this.avaibleFiles = routes;
 		this.avaibleFiles.forEach((route) => {
-			this.loadRoute(route.filename);
+			this._loadRoute(route.filename);
 		});
-		console.table(this.avaibleFiles);
 	}
 
-	scanDir(filepath) {
+	_scanDir(filepath) {
 		var routes = [];
 		if (fs.existsSync(filepath)) {
 			var files = fs.readdirSync(filepath);
@@ -40,10 +39,10 @@ module.exports = class Router {
 				var filename = path.join(filepath, file);
 				var stat = fs.lstatSync(filename);
 				if (stat.isDirectory()) {
-					routes = [...routes, ...this.scanDir(filename)];
+					routes = [...routes, ...this._scanDir(filename)];
 				} else {
 					if (filename.indexOf('.js') >= 0) {
-						var routeInfo = this.getRoute(filename);
+						var routeInfo = this._getRoute(filename);
 						if (routeInfo != null && routeInfo.available) {
 							routes.push(routeInfo);
 						}
@@ -54,7 +53,7 @@ module.exports = class Router {
 		return routes;
 	}
 
-	getRoute(filename) {
+	_getRoute(filename) {
 		var route = require(filename);
 		if (route instanceof Route) {
 			return {
@@ -67,7 +66,7 @@ module.exports = class Router {
 		return null;
 	}
 
-	loadRoute(filename) {
+	_loadRoute(filename) {
 		var route = require(filename);
 		route.load(this.app);
 	}
