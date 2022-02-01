@@ -6,7 +6,7 @@ module.exports = new Route({
 	avaible: true,
 	auth: [],
 	schema: {},
-	functionHandle: async function({ data, session }) {
+	functionHandle: async function() {
 		return new Promise((resolve, reject) => {
 			return reject({
 				code: '1',

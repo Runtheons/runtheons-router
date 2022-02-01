@@ -12,20 +12,12 @@ module.exports = new Route({
 			required: true
 		}
 	},
-	functionHandle: async function({
-		data,
-		session,
-		req,
-		responseOption,
-		responseData
-	}) {
+	functionHandle: async function({ data, session, req, responseData }) {
 		const a = require('./test4');
 		var otherData = await a.functionHandle({
 			data,
 			session,
-			req,
-			responseOption,
-			responseData
+			req
 		});
 
 		return { my: data, other: otherData };
