@@ -1,0 +1,11 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+  push:
+
+jobs:
+  test:
+    name: Test
+    uses: Runtheons/runtheons-CI-CD/.github/workflows/test.yml@v1.0
