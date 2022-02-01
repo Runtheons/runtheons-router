@@ -1,18 +1,18 @@
 {
 	"name": "@runtheons/router",
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"description": "The Runtheons package",
 	"main": "index.js",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Zexal0807/runtheons-router.git"
+		"url": "git+https://github.com/Runtheons/runtheons-router.git"
 	},
 	"author": "Zexal0807",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Zexal0807/runtheons-router/issues"
+		"url": "https://github.com/Runtheons/runtheons-router/issues"
 	},
-	"homepage": "https://github.com/Zexal0807/runtheons-router#readme",
+	"homepage": "https://github.com/Runtheons/runtheons-router#readme",
 	"dependencies": {
 		"@runtheons/authorizzation": "git+https://github.com/Runtheons/runtheons-authorizzation.git#v1.4.0",
 		"@runtheons/session-manager": "git+https://github.com/Runtheons/runtheons-session-manager.git#v1.5.0",

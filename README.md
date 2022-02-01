@@ -4,19 +4,19 @@ npm package to manage the api endpoint
 
 # Index
 
-- [Introduction](https://github.com/Zexal0807/runtheons-router#introduction)
-- [References](https://github.com/Zexal0807/runtheons-router#references)
-- [Getting started](https://github.com/Zexal0807/runtheons-router#getting-started)
-  - [Prerequisites](https://github.com/Zexal0807/runtheons-router#prerequisites)
-  - [Installation](https://github.com/Zexal0807/runtheons-router#installation)
-- [Use](https://github.com/Zexal0807/runtheons-router#use)
-  - [Router](https://github.com/Zexal0807/runtheons-router#router)
-    - [loadRoutes](https://github.com/Zexal0807/runtheons-router#loadRoutes)
-  - [Route](https://github.com/Zexal0807/runtheons-router#route)
-  - [Requiring a Route function](https://github.com/Zexal0807/runtheons-router#requiring-a-route-function)
-    - [With authorizzation and validation](https://github.com/Zexal0807/runtheons-router#with-authorizzation-and-validation)
-  - [With only validation](https://github.com/Zexal0807/runtheons-router#with-only-validation)
-  - [Alone](https://github.com/Zexal0807/runtheons-router#alone)
+- [Introduction](https://github.com/Runtheons/runtheons-router#introduction)
+- [References](https://github.com/Runtheons/runtheons-router#references)
+- [Getting started](https://github.com/Runtheons/runtheons-router#getting-started)
+  - [Prerequisites](https://github.com/Runtheons/runtheons-router#prerequisites)
+  - [Installation](https://github.com/Runtheons/runtheons-router#installation)
+- [Use](https://github.com/Runtheons/runtheons-router#use)
+  - [Router](https://github.com/Runtheons/runtheons-router#router)
+    - [loadRoutes](https://github.com/Runtheons/runtheons-router#loadRoutes)
+  - [Route](https://github.com/Runtheons/runtheons-router#route)
+  - [Requiring a Route function](https://github.com/Runtheons/runtheons-router#requiring-a-route-function)
+    - [With authorizzation and validation](https://github.com/Runtheons/runtheons-router#with-authorizzation-and-validation)
+  - [With only validation](https://github.com/Runtheons/runtheons-router#with-only-validation)
+  - [Alone](https://github.com/Runtheons/runtheons-router#alone)
 
 # Introduction
 
@@ -40,7 +40,7 @@ This project use:
 
 ## Installation
 
-1. `npm install https://github.com/Zexal0807/runtheons-router#2.3.0` to add the package to the project
+1. `npm install https://github.com/Runtheons/runtheons-router#2.3.1` to add the package to the project
 
 # Use
 
