@@ -40,7 +40,7 @@ This project use:
 
 ## Installation
 
-1. `npm install https://github.com/Zexal0807/runtheons-router#2.2.0` to add the package to the project
+1. `npm install https://github.com/Zexal0807/runtheons-router#2.3.0` to add the package to the project
 
 # Use
 
@@ -155,7 +155,7 @@ module.exports = new Route({
 	schema: {},
 	functionHandle: async function ({ session, req }) {
 		const api = require('./sum.js');
-		const sum = await api.athorize({
+		const sum = await api.authorize({
 			data: { num1: 4, num2: 5 },
 			session,
 			req
@@ -201,8 +201,8 @@ module.exports = new Route({
 	auth: [],
 	schema: {},
 	functionHandle: async function ({ session, req }) {
-		const api = require('./validate.js');
-		const sum = await api.athorize({
+		const api = require('./sum.js');
+		const sum = await api.validate({
 			data: { num1: 4, num2: 5 },
 			session,
 			req
@@ -244,7 +244,7 @@ module.exports = new Route({
 	auth: [],
 	schema: {},
 	functionHandle: async function ({ session, req }) {
-		const api = require('./validate.js');
+		const api = require('./sum.js');
 		const sum = await api.functionHandle({
 			data: { num1: 4, num2: 5 },
 			session,
