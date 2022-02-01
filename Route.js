@@ -109,15 +109,17 @@ module.exports = class Route {
 			validation: {
 				status: false,
 				errors: {}
-			},
-			request: {
+			}
+		};
+		if (req != undefined) {
+			responseData.request = {
 				path: this.path,
 				method: this.method,
 				header: req.headers,
-				data: data,
+				data: data || {},
 				session: session
-			}
-		};
+			};
+		}
 		return responseData;
 	}
 
@@ -147,6 +149,9 @@ module.exports = class Route {
 	}
 
 	async authorize({ data, session, req, responseData }) {
+		if (responseData == undefined) {
+			responseData = this.getEmptyResponseData({ data, session, req });
+		}
 		responseData.authorization = await Authorizzation.check(
 			this.auth,
 			session,
@@ -168,6 +173,9 @@ module.exports = class Route {
 	}
 
 	async validate({ data, session, req, responseData }) {
+		if (responseData == undefined) {
+			responseData = this.getEmptyResponseData({ data, session, req });
+		}
 		responseData.validation = await Validator.validate(this.schema, data);
 		if (responseData.validation.status) {
 			responseData.status = true;
