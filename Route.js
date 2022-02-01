@@ -190,7 +190,7 @@ module.exports = class Route {
 
 	notValidDataHandle = function(err) {};
 
-	successHandle = function(err) {};
+	successHandle = function(responseData) {};
 
 	functionHandle = function({ data, session, req, responseData }) {
 		return {};
