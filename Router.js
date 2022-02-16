@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const Route = require('./Route');
-const router = require('./test/server');
 
 module.exports = class Router {
 	app = null;
