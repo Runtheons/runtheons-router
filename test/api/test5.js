@@ -11,8 +11,5 @@ module.exports = new Route({
 			type: 'email',
 			required: true
 		}
-	},
-	functionHandle: async function() {
-		return {};
 	}
 });

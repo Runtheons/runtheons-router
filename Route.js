@@ -116,7 +116,7 @@ module.exports = class Route {
 				path: this.path,
 				method: this.method,
 				header: req.headers,
-				data: data || {},
+				data: data,
 				session: session
 			};
 		}

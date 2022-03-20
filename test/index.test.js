@@ -1,19 +1,18 @@
 const request = require('supertest');
-const assert = require('assert');
 
 const server = require('./server');
 const app = server.app;
 
 describe('Router', () => {
 	test('Requiring from authorizate', () => {
-		assert.equal(server.getAvaibleFiles().length, 9);
+		expect(server.getAvaibleFiles().length).toBe(10);
 	});
 });
 
 describe('Routing', () => {
 	test('Requiring from authorizate', (done) => {
 		request(app)
-			.post('/test1')
+			.post('/test1/11')
 			.send({ email: 'abc.abc@aabc.com' })
 			.expect(200)
 			.expect((res) => {
@@ -24,6 +23,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Requiring from validate', (done) => {
 		request(app)
 			.post('/test2')
@@ -37,6 +37,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Requiring functionHandle', (done) => {
 		request(app)
 			.post('/test3')
@@ -50,6 +51,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Simple GET request', (done) => {
 		request(app)
 			.get('/test4')
@@ -63,6 +65,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('With invalid data', (done) => {
 		request(app)
 			.post('/test5')
@@ -81,6 +84,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('With unuthorized session', (done) => {
 		request(app)
 			.post('/test6')
@@ -99,6 +103,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Returning a reject', (done) => {
 		request(app)
 			.get('/test7')
@@ -115,6 +120,7 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Exception throwed', (done) => {
 		const fs = require('fs');
 		if (fs.existsSync('./debug')) {
@@ -135,12 +141,27 @@ describe('Routing', () => {
 				return done();
 			});
 	});
+
 	test('Returning file', (done) => {
 		request(app)
 			.get('/test9')
 			.send()
 			.expect(200)
 			.expect('Content-Type', /png/)
+			.end((err, res) => {
+				if (err) return done(err);
+				return done();
+			});
+	});
+
+	test('Simple GET request', (done) => {
+		request(app)
+			.get('?int=1&string=Ciao')
+			.send()
+			.expect(200)
+			.expect((res) => {
+				return res.body.data.msg == 'ok' && res.body.status;
+			})
 			.end((err, res) => {
 				if (err) return done(err);
 				return done();

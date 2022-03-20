@@ -6,8 +6,5 @@ module.exports = new Route({
 	method: 'POST',
 	avaible: true,
 	auth: [MyAuth.TEST_NOT_AUTHORIZE],
-	schema: {},
-	functionHandle: async function() {
-		return {};
-	}
+	schema: {}
 });

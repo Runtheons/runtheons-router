@@ -2,7 +2,7 @@ const Route = require('../../Route');
 const MyAuth = require('../MyAuth');
 
 module.exports = new Route({
-	path: '/test1',
+	path: '/test1/:id',
 	method: 'POST',
 	avaible: true,
 	auth: [MyAuth.TEST],
