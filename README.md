@@ -40,7 +40,7 @@ This project use:
 
 ## Installation
 
-1. `npm install https://github.com/Runtheons/runtheons-router#v2.3.2` to add the package to the project
+1. `npm install https://github.com/Runtheons/runtheons-router#v2.3.3` to add the package to the project
 
 # Use
 
