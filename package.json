@@ -1,6 +1,6 @@
 {
 	"name": "@runtheons/router",
-	"version": "2.3.4",
+	"version": "2.3.5",
 	"description": "The Runtheons package",
 	"main": "index.js",
 	"repository": {
@@ -17,7 +17,7 @@
 		"@runtheons/authorizzation": "git+https://github.com/Runtheons/runtheons-authorizzation.git#v1.4.4",
 		"@runtheons/session-manager": "git+https://github.com/Runtheons/runtheons-session-manager.git#v1.5.3",
 		"@runtheons/utils": "git+https://github.com/Runtheons/runtheons-utils.git#v2.5.2",
-		"@runtheons/validate": "git+https://github.com/Runtheons/runtheons-validate.git#v3.5.3",
+		"@runtheons/validate": "git+https://github.com/Runtheons/runtheons-validate.git#v3.5.4",
 		"express": "^4.17.2",
 		"fs": "0.0.1-security",
 		"path": "^0.12.7",
