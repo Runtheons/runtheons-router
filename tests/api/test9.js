@@ -7,7 +7,7 @@ module.exports = new Route({
 	auth: [],
 	schema: {},
 	functionHandle: async function() {
-		return require('path').join(process.cwd(), './test/api/test.png');
+		return require('path').join(process.cwd(), './tests/api/test.png');
 	},
 	sendResponse: function({ req, res, responseData }) {
 		res.status(200);

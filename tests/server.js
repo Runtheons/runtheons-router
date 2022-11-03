@@ -12,6 +12,6 @@ require('@runtheons/session-manager/SessionManager').setKey(
 );
 
 const router = require('../index')(app);
-router.loadRoutes('./test/api/*');
+router.loadRoutes('./tests/api/*');
 
 module.exports = router;
