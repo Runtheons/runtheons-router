@@ -11,7 +11,7 @@ require('@runtheons/session-manager/SessionManager').setKey(
 	'SECRET-RUNTHEONS-KEY-THAT-IS-32B'
 );
 
-const router = require('./../index')(app);
+const router = require('../index')(app);
 router.loadRoutes('./test/api/*');
 
 module.exports = router;
