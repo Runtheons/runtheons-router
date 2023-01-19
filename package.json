@@ -14,7 +14,7 @@
 	},
 	"homepage": "https://github.com/Runtheons/runtheons-router#readme",
 	"dependencies": {
-		"@runtheons/authorizzation": "git+https://github.com/Runtheons/runtheons-authorizzation.git#v1.4.4",
+		"@runtheons/authorizzation": "git+https://github.com/Runtheons/runtheons-authorizzation.git#v1.4.5",
 		"@runtheons/session-manager": "git+https://github.com/Runtheons/runtheons-session-manager.git#v1.5.3",
 		"@runtheons/utils": "git+https://github.com/Runtheons/runtheons-utils.git#v2.5.2",
 		"@runtheons/validate": "git+https://github.com/Runtheons/runtheons-validate.git#v3.5.4",
