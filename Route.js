@@ -52,7 +52,7 @@ module.exports = class Route {
 
 	load(router) {
 		if (this.available) {
-			console.log(this.path + ' is loaded');
+			// console.log(this.path + ' is loaded');
 			var method = this.method.toLowerCase();
 			router[method](this.path, async(req, res) => {
 				await this.resolve(req, res);
