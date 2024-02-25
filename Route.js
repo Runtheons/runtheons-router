@@ -204,8 +204,13 @@ module.exports = class Route {
 		return {};
 	};
 
-	sendResponse({ req, res, responseData }) {
-		res.status(200);
-		res.json(responseData);
+	sendResponse = function({ req, res, responseData }) {
+		if (responseData.status) {
+			res.status(200);
+			res.json(responseData.data);
+		} else {
+			res.status(responseData.errors.code);
+			res.json(responseData.errors);
+		}
 	}
 };
