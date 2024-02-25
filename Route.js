@@ -166,7 +166,7 @@ module.exports = class Route {
 			});
 		} else {
 			responseData.status = false;
-			responseData.errors = responseData.authorization.errors;
+			responseData.errors = { code: 403, errors: responseData.authorization.errors };
 			await this.notAuthorizedHandle(responseData.authorization.errors);
 		}
 		return responseData;
@@ -188,7 +188,7 @@ module.exports = class Route {
 			await this.successHandle(responseData);
 		} else {
 			responseData.status = false;
-			responseData.errors = responseData.validation.errors;
+			responseData.errors = { code: 402, errors: responseData.validation.errors };
 			await this.notValidDataHandle(responseData.validation.errors);
 		}
 		return responseData;
