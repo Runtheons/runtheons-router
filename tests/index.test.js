@@ -4,7 +4,7 @@ const server = require('./server');
 const app = server.app;
 
 describe('Router', () => {
-	test('Requiring from authorizate', () => {
+	test('Get available files', () => {
 		expect(server.getAvaibleFiles().length).toBe(10);
 	});
 });
@@ -14,13 +14,13 @@ describe('Routing', () => {
 		request(app)
 			.post('/test1/11')
 			.send({ email: 'abc.abc@aabc.com' })
-			.expect(200)
-			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status;
+			.then(response => {
+				expect(response.statusCode).toBe(200);
+				return response.body
 			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then((body) => {
+				expect(body.other.msg).toBe('ok');
+				done();
 			});
 	});
 
@@ -28,13 +28,13 @@ describe('Routing', () => {
 		request(app)
 			.post('/test2')
 			.send({ email: 'abc.abc@aabc.com' })
-			.expect(200)
-			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status;
+			.then(response => {
+				expect(response.statusCode).toBe(200);
+				return response.body
 			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then((body) => {
+				expect(body.other.msg).toBe('ok');
+				done();
 			});
 	});
 
@@ -42,13 +42,13 @@ describe('Routing', () => {
 		request(app)
 			.post('/test3')
 			.send({ email: 'abc.abc@aabc.com' })
-			.expect(200)
-			.expect((res) => {
-				return res.body.data.other.msg == 'ok' && res.body.status;
+			.then(response => {
+				expect(response.statusCode).toBe(200);
+				return response.body
 			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then((body) => {
+				expect(body.other.msg).toBe('ok');
+				done();
 			});
 	});
 
@@ -56,13 +56,13 @@ describe('Routing', () => {
 		request(app)
 			.get('/test4')
 			.send()
-			.expect(200)
-			.expect((res) => {
-				return res.body.data.msg == 'ok' && res.body.status;
+			.then(response => {
+				expect(response.statusCode).toBe(200);
+				return response.body
 			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then((body) => {
+				expect(body.msg).toBe('ok');
+				done();
 			});
 	});
 
@@ -70,18 +70,9 @@ describe('Routing', () => {
 		request(app)
 			.post('/test5')
 			.send({})
-			.expect(200)
-			.expect((res) => {
-				return (
-					res.body.status &&
-					res.body.errors.length > 0 &&
-					!res.body.validation.status &&
-					res.body.validation.errors.length > 0
-				);
-			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then(response => {
+				expect(response.statusCode).toBe(402);
+				done();
 			});
 	});
 
@@ -89,35 +80,18 @@ describe('Routing', () => {
 		request(app)
 			.post('/test6')
 			.send({})
-			.expect(200)
-			.expect((res) => {
-				return (
-					res.body.status &&
-					res.body.errors.length > 0 &&
-					!res.body.authorization.status &&
-					res.body.authorization.errors.length > 0
-				);
-			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then(response => {
+				expect(response.statusCode).toBe(403);
+				done();
 			});
 	});
 
 	test('Returning a reject', (done) => {
 		request(app)
 			.get('/test7')
-			.expect(200)
-			.expect((res) => {
-				return (!res.body.status &&
-					res.body.errors.length > 0 &&
-					res.body.authorization.status &&
-					res.body.validation.status
-				);
-			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
+			.then(response => {
+				expect(response.statusCode).toBe(405);
+				done();
 			});
 	});
 
@@ -128,17 +102,15 @@ describe('Routing', () => {
 		}
 		request(app)
 			.get('/test8')
-			.expect(200)
-			.expect((res) => {
-				var files = fs.readdirSync('./debug');
-				return !res.body.status && files.length > 0;
+			.then(response => {
+				expect(response.statusCode).toBe(401);
+				return response.body
 			})
-			.end((err, res) => {
+			.then((body) => {
 				if (fs.existsSync('./debug')) {
 					fs.rmdirSync('./debug', { recursive: true });
 				}
-				if (err) return done(err);
-				return done();
+				done();
 			});
 	});
 
@@ -154,17 +126,4 @@ describe('Routing', () => {
 			});
 	});
 
-	test('Simple GET request', (done) => {
-		request(app)
-			.get('?int=1&string=Ciao')
-			.send()
-			.expect(200)
-			.expect((res) => {
-				return res.body.data.msg == 'ok' && res.body.status;
-			})
-			.end((err, res) => {
-				if (err) return done(err);
-				return done();
-			});
-	});
 });

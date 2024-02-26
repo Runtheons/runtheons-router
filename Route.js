@@ -209,7 +209,7 @@ module.exports = class Route {
 			res.status(200);
 			res.json(responseData.data);
 		} else {
-			res.status(responseData.errors.code);
+			res.status(responseData.errors.code || 401);
 			res.json(responseData.errors);
 		}
 	}

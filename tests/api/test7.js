@@ -9,7 +9,7 @@ module.exports = new Route({
 	functionHandle: async function() {
 		return new Promise((resolve, reject) => {
 			return reject({
-				code: '1',
+				code: 405,
 				message: 'ok'
 			});
 		});
